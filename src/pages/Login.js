@@ -1,15 +1,31 @@
-import { Link } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Logo from '../components/Logo/Logo'
+import FormLogin from '../components/FormLogin/FormLogin'
+import { useEffect } from 'react';
 
-function Login() {
-  
+
+export default function Login() {
+
+  useEffect(() => {
+    localStorage.removeItem("user");
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <Link to="/grafica">Grafica</Link>
-        
-      </header>
-    </div>
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginTop: '10vh',
+          }}
+        >
+
+          <Logo/>
+          <FormLogin />            
+
+        </Box>
+      </Container>
   );
 }
-
-export default Login;

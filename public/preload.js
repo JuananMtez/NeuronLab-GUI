@@ -1,33 +1,48 @@
-// preload with contextIsolation enabled
-const { contextBridge } = require('electron')
-const lsl = require('lsl.js');
+const { contextBridge } = require('electron');
+//const lsl = require('lsl.js');
+const lsl = require('../../lsl/index')
+let streams = null;
+let streamInlet = null;
 
-let streams;
-let streamInlet;
+let data = [];
+
+let interval;
+
+const getDataFromLSL = () => {
+    console.log(streamInlet.pullChunk());
+}
 
 contextBridge.exposeInMainWorld('lsl', {
-    start: () => {
 
-        if (streams == null) {
+    search: () => {
+        if (streams === null) {
             streams = lsl.resolve_byprop('type', 'EEG');
-            if (streams != null)
-                streamInlet = new lsl.StreamInlet(streams[0]);
-        } else {
-            streamInlet.streamChunks(12, 1000);
-            streamInlet.on('chunk', console.log);
-            streamInlet.on('closed', () => console.log('LSL inlet closed'));
+            if (streams === null || streams.length === 0) {
+                streams = null;
+                return false;
+            }
+            return true;
+
         }
+    },
 
-        
+    start: (sec) => {
 
+        if (streams !== null && streams.length > 0) {
+            streamInlet = new lsl.StreamInlet(streams[0]);
+            interval = setInterval(getDataFromLSL, 100);
+        } 
     },
 
     stop: () => {
-        if (streamInlet !== null)
-            streamInlet.close();
-    }
+        if (streamInlet !== null) {
+            clearInterval(interval);
+            streams = null;
+            streamInlet = null;
 
-    
+        }
+    },
+
 })
 
 
