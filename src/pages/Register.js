@@ -54,6 +54,7 @@ const Register = () => {
                   id="outlined-basic" 
                   label="Code" 
                   value={code} 
+                  type="password"
                   onChange={e => setCode(e.target.value)} 
                   variant="outlined" 
                   sx={{
@@ -68,6 +69,7 @@ const Register = () => {
                   id="outlined-basic" 
                   label="Code" 
                   value={code} 
+                  type="password"
                   onChange={e => setCode(e.target.value)} 
                   variant="outlined" 
                 />

@@ -8,9 +8,11 @@ import  Grid  from "@mui/material/Grid"
 
 
 import "../styles/Home.css"
+import { useState } from "react"
 const Home = () => {
+  const [init, setInit] = useState(false)
   return (
-    <Sidebar init={false} pos='-1'>
+    <Sidebar init={init} pos='-1' handleSidebar={setInit}>
       <Container maxWidth="lg">
         <Box sx={{
           display: 'flex',

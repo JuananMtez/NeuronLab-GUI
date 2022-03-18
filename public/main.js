@@ -1,5 +1,7 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path')
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const lsl = require('../../lsl/index')
+
 
 function createWindow() {
    const win = new BrowserWindow(
@@ -30,6 +32,3 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
-
-
-

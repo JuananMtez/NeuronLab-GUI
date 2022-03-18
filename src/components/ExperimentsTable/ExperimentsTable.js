@@ -9,14 +9,14 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const SubjectsTable = ({ sidebar }) => {
+const ExperimentsTable = ({ init }) => {
 
   const [loading, setLoading] = useState(true)
   const [rows, setRows] = useState([])
   const navigate = useNavigate()
 
   const deleteSubject = (id) => {
-    axios.delete(`http://localhost:8000/subject/${id}`)
+    axios.delete(`http://localhost:8000/experiment/${id}`)
     setRows(rows.filter(e => e.id !== id))
   }
   
@@ -26,8 +26,7 @@ const SubjectsTable = ({ sidebar }) => {
       <IconButton 
         onClick={e => {
           e.stopPropagation()
-          let data = rows.find(e => e.id === params.id)
-          navigate('/subject/data', { state: {...data, sidebar:sidebar}})
+          navigate('/experiment/data', { state: {id: params.id, sidebar:init}})
         }}
       >
         <OpenInNewSharp sx={{color:'white', fontSize:'2.5rem'}}/>
@@ -52,10 +51,7 @@ const SubjectsTable = ({ sidebar }) => {
   const columns = [
   
     { field: 'name', headerName: 'Name', width: 200, headerAlign: 'center', sortable: false},
-    { field: 'surname', headerName: 'Surname', width: 200, headerAlign: 'center', type: 'number', sortable: false},
-    { field: 'age', headerName: 'Age', type: 'number', width: 200, headerAlign: 'center', sortable: false },
-    { field: 'gender', headerName: 'Gender', width: 200, headerAlign: 'center', sortable: false },
-
+    { field: 'description', headerName: 'Description', width: 200, headerAlign: 'center', sortable: false},
     {
       width: 150,
       headerName: 'Open',
@@ -79,7 +75,8 @@ const SubjectsTable = ({ sidebar }) => {
   
   useEffect(() => {
     let isMounted = true;  
-    axios.get('http://localhost:8000/subject/')
+    const user = JSON.parse(localStorage.getItem('user'))
+    axios.get(`http://localhost:8000/experiment/filter/researcher/${user.id}`)
     .then(response => {
       if (isMounted) {
         setLoading(false)
@@ -92,8 +89,8 @@ const SubjectsTable = ({ sidebar }) => {
   }, [])
 
   return (
-    <Table columns={columns} rows={rows} loading={loading}  showCheck={false} height='70vh' rowPerPage={10}/>
+    <Table columns={columns} rows={rows} loading={loading} showCheck={false} height='70vh' rowPerPage={10}/>
   );
 }
 
-export default SubjectsTable
+export default ExperimentsTable

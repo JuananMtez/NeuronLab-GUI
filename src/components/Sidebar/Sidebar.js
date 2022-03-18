@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,12 +14,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { AccountBoxSharp, GroupSharp, LogoutSharp, PsychologySharp } from '@mui/icons-material'
 import { Link } from "react-router-dom";
 import Typography from '@mui/material/Typography';
-
-
-
-
-
-
 
 const drawerWidth = 240;
 
@@ -82,29 +75,28 @@ const getIcon = (index, style) => {
 };
 
 
-const Sidebar = ({ children, init, pos, tab}) => {
+const Sidebar = ({ children, init, pos, tab, handleSidebar}) => {
   const theme = useTheme();
-  const [open, setOpen] = useState(init);
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    handleSidebar(true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    handleSidebar(false);
   };
 
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" open={open} sx={{backgroundColor: '#525558'}}>
+      <AppBar position="fixed" open={init} sx={{backgroundColor: '#525558'}}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{mr: 2, ...(open && { display: 'none' }) }}
+            sx={{mr: 2, ...(init && { display: 'none' }) }}
           >
           
             <MenuIcon />
@@ -128,7 +120,7 @@ const Sidebar = ({ children, init, pos, tab}) => {
         }}
         variant="persistent"
         anchor="left"
-        open={open}
+        open={init}
       >
         <DrawerHeader>
           <IconButton             
@@ -161,7 +153,7 @@ const Sidebar = ({ children, init, pos, tab}) => {
             ))}
           </List>
       </Drawer>
-      <Main open={open}>
+      <Main open={init}>
         <DrawerHeader />
         {children}
 

@@ -30,6 +30,11 @@ const FormLogin = () => {
     navigate('../register')
   }
 
+  const onKeyDown = (event) => {
+    if (!disabled && event.key === 'Enter' )
+      handleLogin()
+  }
+
   const handleLogin = () => {
     axios.post('http://127.0.0.1:8000/researcher/login', value)
     .then(response => {
@@ -53,6 +58,7 @@ const FormLogin = () => {
         label="User" 
         value={value.user}
         onChange={handleChange}
+        onKeyDown={onKeyDown}
         id="user"
         name="user"
       />
@@ -63,6 +69,7 @@ const FormLogin = () => {
         type="password" 
         value={value.password}
         onChange={handleChange}
+        onKeyDown={onKeyDown}
         name="password"
         id="password"
       />

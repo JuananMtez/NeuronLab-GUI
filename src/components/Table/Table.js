@@ -2,25 +2,27 @@ import { DataGrid } from '@mui/x-data-grid';
 import  Box from '@mui/material/Box';
 
 
-const Table = ({style, columns, rows, loading, rowsSelected, showCheck }) => {
+const Table = ({ columns, rows, loading, rowsSelected, showCheck, height, rowPerPage }) => {
 
   return (
-    <Box sx={{ height: '70vh', width: '100%'}}>
+    <Box sx={{ height: height, width: '100%'}}>
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pageSize={rowPerPage}
+        rowsPerPageOptions={[rowPerPage]}
         checkboxSelection={showCheck}
         loading={loading}
         disableColumnMenu
         disableSelectionOnClick
+        
         onSelectionModelChange={(newSelectionModel) => {
+          
           rowsSelected(newSelectionModel);
         }}
 
         
-        sx={{marginTop:style.marginTop, 
+        sx={{ 
         color:'white', 
         fontSize:'18px',
         backgroundColor:'#525558',
