@@ -6,10 +6,24 @@ import Button from '@mui/material/Button';
 import { useState } from "react";
 import FormInfoExperiment from './FormInfoExperiment'
 import CSVTable from "../CSV/CSVTable";
+import ReloadButton from "../ReloadButton/ReloadButton"
+import axios from "axios";
 
 
 const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleExperiments, subjects, handleSubjects, init }) => {
   const [showInfo, setInfo] = useState(false)
+
+  const handleReload = () => {
+    axios.get(`http://localhost:8000/csv/${data.id}`)
+    .then(response => {
+      handleExperiments({
+        ...data,
+        csvs: response.data
+        
+      })
+    })
+
+  }
 
   return ( 
     <Container maxWidth="lg">
@@ -75,7 +89,14 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
             <CSVTable 
               data={data}
               handleData={handleExperiments}
+              sidebar={init}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <ReloadButton 
+              handleReloadClick={handleReload}
+            />
+
           </Grid>
 
         </Grid>

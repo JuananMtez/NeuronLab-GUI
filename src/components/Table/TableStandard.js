@@ -51,7 +51,10 @@ const TableStandard = ({ columns, data }) => {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                <th {...column.getHeaderProps({style: { minWidth: column.minWidth, width: column.width, color:'white' }})}
+                >
+                  {column.render('Header')}
+                </th>
               ))}
             </tr>
           ))}
@@ -62,7 +65,13 @@ const TableStandard = ({ columns, data }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  return <td {...cell.getCellProps({
+                    style: {
+                      minWidth: cell.column.minWidth,
+                      width: cell.column.width,
+                      color: 'white'
+                    },
+                  })}>{cell.render('Cell')}</td>
                 })}
               </tr>
             )

@@ -12,6 +12,7 @@ import DataSubject from './pages/DataSubject';
 import AddExperiment from './pages/AddExperiment'
 import DataExperiment from './pages/DataExperiment'
 import RecordEEG from './pages/RecordEEG';
+import DataCsv from './pages/DataCsv';
 
 
 
@@ -31,6 +32,8 @@ function App() {
       <Route path="experiment/add" element={<AddExperiment/>}/>
       <Route path="experiment/data" element={<DataExperiment/>}/>
       <Route path="experiment/record_eeg" element={<RecordEEG/>}/>
+      <Route path="csv/data" element={<DataCsv/>}/>
+
 
 
     </Routes>

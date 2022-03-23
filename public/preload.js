@@ -1,102 +1,266 @@
-const { contextBridge } = require('electron');
-
-
+const { contextBridge, ipcRenderer } = require('electron');
 
 const lsl = require('../../lsl/index')
-let streams = null;
-let streamInlet = null;
+const dgram = require('dgram');
 
+var FormData = require('form-data');
+var fs = require('fs');
+const axios = require('axios').default;
+const path = require('path')
+
+
+// LSL Device stream
+let streamsEEG = null;
+let streamInletEEG = null;
+
+// LSL Stimulus stream
+let streamsStimulus = null
+let streamInletStimulus = null;
+
+// UDP Stimulus stream
+let server = null
+
+
+let recording = false
 let volts = []
-let index = 0
 
+let rate = 0;
 let interval;
 
+let cont = 0
+
+let dataInput = []
+let timestamp = []
+let stimuli = []
+let stimuliAlwaysMemory = []
+
+
 const getDataFromLSL = () => {
-    const { samples, data, timestamps } = streamInlet.pullChunk()
+    const { samples, data, timestamps, dataOriginal } = streamInletEEG.pullChunk()
 
     if (samples > 0) {
-        let pos = 0;
         for (let i = 0; i < data.length; i++) {
-            volts[i].reverse()
-            pos = index
             for (let j = 0; j < timestamps.length; j++) {
-                volts[i][pos % volts[i].length] = {pv:data[i][j]}
-                pos++; 
+                volts[i].shift()
+                volts[i].push({pv:data[i][j]})
             }
-            volts[i].reverse()
         }
-        index = pos  % volts[0].length
+
+        if (recording) {
+            dataInput.push(dataOriginal)
+            timestamp = timestamp.concat(timestamps)
+            if (timestamp.length > 2500) {
+                fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
+                initArraysRecording()
+                cont++;
+            }
+        }
+
     }
+    if (streamInletStimulus !== null) {
+        //streamInletStimulus.push_sample()
+    } 
 }
 
 
+    
+const changeWindowTime = (sec) => {
+    initArrays(volts.length, sec)
+}
 
-const initArrays = (numChannels, sampleRate) => {
+
+const initArrays = (numChannels, time) => {
     volts = []
-    index = 0
     for (let i = 0; i < numChannels; i++) {
-        let channel = Array(sampleRate*5).fill({pv:0})
+        let channel = Array(rate*time).fill({pv:0})
         volts.push(channel)
     }
+
 }
 
+const initArraysRecording = () => {
+    dataInput = []
+    timestamp = []
+    stimuli = []
+}
+
+const clear = () => {
+
+    streamsEEG = null;
+    streamInletEEG = null;
+    
+    // LSL Stimulus stream
+    streamsStimulus = null
+    streamInletStimulus = null;
+    
+    // UDP Stimulus stream
+    server = null
+    
+    
+    recording = false
+    volts = []
+    
+    rate = 0;
+    if (interval)
+        clearInterval(interval);
+
+    dataInput = []
+    timestamp = []
+    stimuli = []
+    stimuliAlwaysMemory = []
+
+    fs.readdir('tmp', (err, files) => {
+        files.forEach(file => {
+            fs.unlink(path.join('tmp', file), err => {
+                if (err) throw err;
+              });
+          
+        });
+    })
+    cont = 0
+}
 contextBridge.exposeInMainWorld('lsl', {
 
 
+    start: () => {
 
-
-    start: (sec) => {
-
-        if (streams !== null && streams.length > 0) {
-            streamInlet = new lsl.StreamInlet(streams[0]);
+        if (streamsEEG !== null && streamsEEG.length > 0) {
+            streamInletEEG = new lsl.StreamInlet(streamsEEG[0]);
             interval = setInterval(getDataFromLSL, 0);
         } 
     },
 
     stop: () => {
-        if (streamInlet !== null) {
+        if (streamInletEEG !== null) {
             clearInterval(interval);
-            interval = -1
-            streamInlet = null;
-            //initArrays(volts.length, volts[0].length/5)
+            streamInletEEG = null;
         }
     },
 
+    startStimulusLSLRecording: () => {
+        if (streamsStimulus !== null && streamsStimulus.length > 0) {
+            streamInletStimulus = new lsl.StreamInlet(streamsStimulus[0])
+            initArraysRecording()
+            recording=true
+        }
+    },
+
+    stopStimulusLSLRecording: () => {
+        streamInletStimulus = null
+        recording = false
+
+    },
+
+    startStimulusUDPRecording: (port) => {
+        server = dgram.createSocket('udp4');
+        server.on('message', (msg, rinfo) => {
+            const {stimulus, timestamp} = JSON.parse(msg)
+            stimuli.push([stimulus, timestamp])
+           // if (stimulus != '0') {
+            stimuliAlwaysMemory.push({stimulus: stimulus, timestamp: timestamp})
+            //}
+
+        });
+
+        initArraysRecording()
+
+        server.bind(port);
+        recording = true
+
+    },
+
+    stopStimulusUDPRecording: () => {
+        server.close();
+        server = null
+        recording = false
+    },
     closeStream: () => {
 
-        streams = null
-        streamInlet = null
-        if (interval !== -1) {
-            clearInterval(interval)
-            interval = -1
-        }
-        initArrays(volts.length, volts[0].length/5)
+        streamsEEG = null
+        streamInletEEG = null        
+        initArrays(volts.length, 5)
         
 
 
     },
 
-    searchStreams: (numChannels, sampleRate) => {
+    closeStreamStimulus: () => {
+        streamsStimulus = null
+        streamInletStimulus = null
+
+    },
+
+    searchStreams: (element, type) => {
         return new Promise((resolve, reject) => {
-            streams = lsl.resolve_byprop('type', 'EEG');
-            if (streams === null || streams.length === 0) {
-              streams = null
-              resolve(false)
+
+            if (element === 'device') {
+                streamsEEG = lsl.resolve_byprop('type', type);
+                if (streamsEEG === null || streamsEEG.length === 0) {
+                    streamsEEG = null
+                    resolve(false)
+                }
+                rate = streamsEEG[0].getNominalSamplingRate()
+                initArrays(streamsEEG[0].getChannelCount(), 5)
+
+            } else {
+                streamsStimulus = lsl.resolve_byprop('name', type);
+                if (streamsStimulus === null || streamsStimulus.length === 0) {
+                    streamsStimulus = null
+                    resolve(false)
+                }
             }
-            initArrays(numChannels, sampleRate)
             resolve(true)
           })
 
-    }, getVolts: () => {
-        /*if (volts[i] !== undefined)
-            return volts[i].map(e => ({pv:e}))
-        else 
-            return undefined
-        */
+    }, 
+     
+    getVolts: () => {
         if (volts[0] !== undefined)
             return volts
         return undefined
-    }
+
+    }, 
+
+    getStimulusReceived: () => {
+        
+        return stimuliAlwaysMemory
+    },
+    
+    changeWindow: (sec) => {
+        changeWindowTime(sec)
+    
+    }, 
+
+    closeAll: () => {
+
+
+        clear()
+
+
+    },
+    save: (name, subject_id, experiment_id) => {
+        
+        fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
+
+        const form = new FormData();
+        let names = fs.readdirSync('tmp')
+        console.log(names)
+        for (let i = 0; i < names.length; i++)
+            form.append('files', fs.createReadStream(path.join('tmp', names[i])))
+
+
+        axios.post(`http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}`, form, {
+            headers: {
+              ...form.getHeaders()
+            },
+            adapter: require('axios/lib/adapters/http')
+            }).then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
+            .catch((error => ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')))
+            .finally(() => clear())
+           
+        }
+    
+    
     
 
 })

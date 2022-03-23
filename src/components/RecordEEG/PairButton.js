@@ -3,36 +3,47 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { useState } from "react"
 import Radio from '@mui/material/Radio';
 import { Button } from "@mui/material";
+import TextFieldStyled from "../TextFieldStyled/TextFieldStyled";
 
 
 
-const PairButton = ({status, handlePairBtn, handleUnpairBtn }) => {
+const PairButton = ({ disabled, name, valueTextField, pair, handlePairBtn, handleUnpairBtn, text, handleOnChange }) => {
 
   return (
     <Stack direction="row" spacing={2} sx={{ml:2}}>
+      <TextFieldStyled 
+        size="small"
+        value={valueTextField}
+        onChange={handleOnChange}
+        name={name}
+        disabled={disabled}
+        label={text === 'device' ? "Type": 'Name'}
+        sx={{width:'15vh'}}
+      />
 
-      {!status.pair 
+      {!pair 
       ?
         <LoadingButton
-          size="medium"
+          size="small"
           onClick={handlePairBtn}
           variant="contained"
-          loading={status.loading}
+          disabled={valueTextField === ''}
         >
-          Pair
+          Pair {text}
         </LoadingButton>
       :
         <Button
-          size="medium"
+          size="small"
           onClick={handleUnpairBtn}
+          disabled={disabled}
           variant="contained"
           color="error"
         >
-          Unpair
+          Unpair {text}
         </Button>
     }
     <Radio
-      checked={status.pair}
+      checked={pair}
       name="radio-buttons"
     />
 

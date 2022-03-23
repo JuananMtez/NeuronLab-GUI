@@ -1,6 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
-const lsl = require('../../lsl/index')
 
 
 function createWindow() {
@@ -13,6 +12,13 @@ function createWindow() {
         }
       });
 
+      ipcMain.on('open_dialog', (event, text) => {
+        dialog.showMessageBox(win, {
+          message: text,
+          icon: null
+        });
+      })
+      
       win.loadURL('http://localhost:3000'); 
 }
 
@@ -32,3 +38,5 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+
+

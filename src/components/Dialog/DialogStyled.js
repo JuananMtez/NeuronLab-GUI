@@ -12,7 +12,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogStyled = ({ open, handleClose, text, handleText, handleSend }) => {
+const DialogStyled = ({ title, description, open, handleClose, text, handleText, handleClick }) => {
   return (
     <Dialog
       open={open}
@@ -25,10 +25,10 @@ const DialogStyled = ({ open, handleClose, text, handleText, handleSend }) => {
           fontWeight:'bold'
         }}}
     >
-      <DialogTitle>{"Copy CSV"}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide" sx={{color:'white'}}>
-          Write a name for the new CSV
+          {description}
         </DialogContentText>
         <TextFieldStyled
             autoFocus
@@ -43,7 +43,7 @@ const DialogStyled = ({ open, handleClose, text, handleText, handleSend }) => {
       </DialogContent>
       <DialogActions>
         <Button size="small" variant="contained" onClick={handleClose}color="error">Cancel</Button>
-        <Button disabled={text.length === 0 ? true : false} size="small" variant="contained" onClick={handleSend}>Accept</Button>
+        <Button disabled={text.length === 0 ? true : false} size="small" variant="contained" onClick={handleClick}>Accept</Button>
       </DialogActions>
     </Dialog>
   )

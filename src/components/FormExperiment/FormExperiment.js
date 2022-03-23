@@ -238,7 +238,7 @@ const FormExperiment = ({ init }) => {
                 onChange={ev => handleChangeLabel(ev, index)}
                 value={e.description}
                 name="label"
-                label="Label"
+                label="Description"
                 fullWidth 
               />
             </Grid>

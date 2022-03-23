@@ -1,20 +1,13 @@
 
-import { Button } from "@mui/material";
-import { useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import ChannelsEnum from '../ChannelsEnum';
 import TableStandard from '../Table/TableStandard';
 import ChannelColumn from './ChannelColumn';
 import ChartEEG from "./ChartEEG";
 
-const getRandom = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
-};
+
 
 const getColor = (i) => {
-
-
 
   switch(i) {
     case '0':
@@ -44,27 +37,31 @@ const initArray = () => {
   }
   return volts
 }
-const TableEEG = ({ device, play, pair}) => {
+
+let interval = 0
+const TableEEG = memo(({ device, play, pair}) => {
   const [items, setItems] = useState(initArray)
-  const [id, setId] = useState(0)
+
 
 
   useEffect(() => {
+    let isMounted = true
     if(!play) {
-      if (id > 0)
-        clearInterval(id);
-      if (!pair)
-        setItems(initArray)
-      return;
+      if (interval > 0)
+        clearInterval(interval);
+      return
     }
-  
-    const newIntervalId = setInterval(() => {
-      setItems(window.lsl.getVolts());
-    }, 0);
 
-    setId(newIntervalId);
+    if (isMounted) 
+      interval = setInterval(() => {setItems(window.lsl.getVolts())}, 100)
+    
+    return () => {
+      isMounted = false
+      if (interval > 0)
+        clearInterval(interval)
+    }
 
-  }, [play])
+  }, [play, pair])
 
 
 
@@ -72,8 +69,10 @@ const TableEEG = ({ device, play, pair}) => {
     () => [
       {
         Header: () => null,
+        maxWidth: 80,
+        minWidth: 30,
+        width: 60,
         id: 'channel',
-        hideHeader: false,
         Cell: ({ row }) => {
           return (
             <ChannelColumn name={ChannelsEnum[device.channels[row.id].channel-1].name} status={true} />
@@ -83,12 +82,24 @@ const TableEEG = ({ device, play, pair}) => {
       {
         Header: () => null,
         id: 'chart',       
-        hideHeader: false,
-
+        maxWidth: 300,
+        minWidth: 200,
+        width: 300,
 
         Cell: ({ row }) => {
           return (<ChartEEG items={items[row.id]} color={getColor(row.id)}/>)
-      }
+        }
+      },
+      {
+        Header: () => null,
+        maxWidth: 90,
+        minWidth: 90,
+        width: 90,
+        id: 'lastVolt',  
+        Cell: ({ row }) => {
+          return (<p style={{color:'white', fontSize:'15px'} }>{items[row.id][items[row.id].length -1 ].pv.toFixed(2)} uVrms</p>)
+        }     
+
       }
     ], [device, items])
 
@@ -112,6 +123,6 @@ const TableEEG = ({ device, play, pair}) => {
 
     
   )
-}
+})
 
 export default TableEEG

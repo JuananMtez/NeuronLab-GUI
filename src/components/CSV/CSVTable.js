@@ -6,11 +6,16 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DialogStyled from '../Dialog/DialogStyled'
 import axios from 'axios';
 import { DeleteSharp } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { OpenInNewSharp } from '@mui/icons-material';
 
-const CSVTable = ({ data, handleData }) => {
+
+
+const CSVTable = ({ data, handleData, sidebar }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('')
   const [idCSV, setIdCSV] = useState('')
+  const navigate = useNavigate()
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
@@ -32,6 +37,20 @@ const CSVTable = ({ data, handleData }) => {
       setOpen(false)
 
     })
+  }
+
+  const OpenBtn = (params) => {
+    return (
+      <IconButton 
+        onClick={e => {
+          e.stopPropagation()
+          let csv = data.csvs.find(e => e.id === params.id)
+          navigate('/csv/data', { state: {csv: csv , sidebar:sidebar, experiment: data.id}})
+        }}
+      >
+        <OpenInNewSharp sx={{color:'white', fontSize:'2.5rem'}}/>
+      </IconButton>
+    )
   }
  
   const handleName = (e) => setName(e.target.value)
@@ -88,7 +107,16 @@ const CSVTable = ({ data, handleData }) => {
   
     { field: 'name', headerName: 'Name', width: 200, headerAlign: 'center', sortable: false},
     { field: 'subject_name', headerName: 'Subject', width: 200, headerAlign: 'center', sortable: false},
-    { field: 'original', headerName: 'Original', width: 200, headerAlign: 'center', sortable: false},
+    { field: 'original', headerName: 'Type', width: 200, headerAlign: 'center', sortable: false},
+    {
+      width: 150,
+      headerName: 'Open',
+      field: 'open',
+      renderCell: OpenBtn,
+      disableClickEventBubbling: true,
+      headerAlign: 'center',
+      sortable: false
+    },
     {
       width: 150,
       headerName: 'Copy',
@@ -108,6 +136,18 @@ const CSVTable = ({ data, handleData }) => {
       sortable: false
     },
   ];
+  let rows = []
+  if (data.csvs !== undefined) {
+    rows = data.csvs.map(c => {
+      let d = ''
+      c.original === true ? d = 'original' : d = 'copied'
+      return {
+        ...c,
+        original: d
+      }
+    })
+  }
+     
 
 
   return (
@@ -118,11 +158,13 @@ const CSVTable = ({ data, handleData }) => {
           handleClose={handleClose}
           text={name}
           handleText={handleName}
-          handleSend={createCopy}
+          handleClick={createCopy}
+          title="Copy CSV"
+          description="Write a name for the new CSV"
         />
       </Grid>
     <Grid item xs={12}>
-      <Table columns={columns} rows={data.csvs === undefined ? [] : data.csvs} loading={false} showCheck={true} height='70vh' rowPerPage={10}/>
+      <Table columns={columns} rows={rows} loading={false} showCheck={true} height='70vh' rowPerPage={10}/>
     </Grid>
   </Grid>
 

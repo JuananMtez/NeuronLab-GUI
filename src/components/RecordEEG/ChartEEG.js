@@ -1,15 +1,14 @@
-import { LineChart, Line, YAxis, XAxis} from 'recharts';
+import { LineChart, Line } from 'recharts';
 
 
 const ChartEEG = ({ items, color }) => {
   return (
 
     <LineChart 
-      width={1200} 
-      height={40} 
+      width={1130} 
+      height={50} 
       data={items}
     >
-
       <Line type="monotone" dataKey="pv" isAnimationActive={false} stroke={color} dot={false}/>
     </LineChart>
 
