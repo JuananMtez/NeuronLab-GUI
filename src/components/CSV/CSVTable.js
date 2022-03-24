@@ -11,7 +11,7 @@ import { OpenInNewSharp } from '@mui/icons-material';
 
 
 
-const CSVTable = ({ data, handleData, sidebar }) => {
+const CSVTable = ({ data, handleData, sidebar, rowsSelected }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('')
   const [idCSV, setIdCSV] = useState('')
@@ -45,7 +45,7 @@ const CSVTable = ({ data, handleData, sidebar }) => {
         onClick={e => {
           e.stopPropagation()
           let csv = data.csvs.find(e => e.id === params.id)
-          navigate('/csv/data', { state: {csv: csv , sidebar:sidebar, experiment: data.id}})
+          navigate('/csv/data', { state: {csv: csv , sidebar:sidebar, experiment_id: data.id}})
         }}
       >
         <OpenInNewSharp sx={{color:'white', fontSize:'2.5rem'}}/>
@@ -59,7 +59,7 @@ const CSVTable = ({ data, handleData, sidebar }) => {
   const DeleteBtn = (params) => {
 
     let csv = data.csvs.find(c => c.id === params.id)
-    if (csv.original)
+    if (csv.type === 'original')
       return (
         
         <IconButton sx={{visibility:'hidden'}}>
@@ -107,7 +107,7 @@ const CSVTable = ({ data, handleData, sidebar }) => {
   
     { field: 'name', headerName: 'Name', width: 200, headerAlign: 'center', sortable: false},
     { field: 'subject_name', headerName: 'Subject', width: 200, headerAlign: 'center', sortable: false},
-    { field: 'original', headerName: 'Type', width: 200, headerAlign: 'center', sortable: false},
+    { field: 'type', headerName: 'Type', width: 200, headerAlign: 'center', sortable: false},
     {
       width: 150,
       headerName: 'Open',
@@ -136,18 +136,7 @@ const CSVTable = ({ data, handleData, sidebar }) => {
       sortable: false
     },
   ];
-  let rows = []
-  if (data.csvs !== undefined) {
-    rows = data.csvs.map(c => {
-      let d = ''
-      c.original === true ? d = 'original' : d = 'copied'
-      return {
-        ...c,
-        original: d
-      }
-    })
-  }
-     
+ 
 
 
   return (
@@ -164,7 +153,7 @@ const CSVTable = ({ data, handleData, sidebar }) => {
         />
       </Grid>
     <Grid item xs={12}>
-      <Table columns={columns} rows={rows} loading={false} showCheck={true} height='70vh' rowPerPage={10}/>
+      <Table columns={columns} rowsSelected={rowsSelected} rows={data.csvs !== undefined ? data.csvs : []} loading={false} showCheck={true} height='70vh' rowPerPage={10}/>
     </Grid>
   </Grid>
 

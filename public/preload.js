@@ -119,7 +119,7 @@ const clear = () => {
     })
     cont = 0
 }
-contextBridge.exposeInMainWorld('lsl', {
+contextBridge.exposeInMainWorld('api', {
 
 
     start: () => {
@@ -258,6 +258,13 @@ contextBridge.exposeInMainWorld('lsl', {
             .catch((error => ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')))
             .finally(() => clear())
            
+        },
+
+        applyFilter: (msg) => {
+            axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
+            .then(response => ipcRenderer.send('open_dialog', 'Preproccessing applied correctly'))
+
+            .catch(error => ipcRenderer.send('open_dialog', 'An error occurred during processing'))
         }
     
     

@@ -1,7 +1,8 @@
+const { default: axios } = require('axios');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
-
+let progressProccessing
 function createWindow() {
    const win = new BrowserWindow(
       {
@@ -18,6 +19,9 @@ function createWindow() {
           icon: null
         });
       })
+
+
+      
       
       win.loadURL('http://localhost:3000'); 
 }

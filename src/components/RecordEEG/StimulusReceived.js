@@ -5,7 +5,7 @@ import TableStandard from "../Table/TableStandard";
 let interval = 0
 const StimulusReceived = memo(({ recording }) => {
 
-  const [stimulus, setStimulus] = useState(window.lsl.getStimulusReceived())
+  const [stimulus, setStimulus] = useState(window.api.getStimulusReceived())
 
   const columns = useMemo(
     () => [
@@ -40,7 +40,7 @@ const StimulusReceived = memo(({ recording }) => {
     }
 
     if (isMounted) 
-      interval = setInterval(() => setStimulus(window.lsl.getStimulusReceived()), 5000)
+      interval = setInterval(() => setStimulus(window.api.getStimulusReceived()), 5000)
     
     return () => {
       isMounted = false

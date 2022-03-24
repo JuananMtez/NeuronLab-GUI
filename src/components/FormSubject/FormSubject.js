@@ -20,23 +20,7 @@ import { useState } from "react";
 import BackButtonFixed from "../BackButton/BackButtonFixed";
 import SelectStyled from "../Select/SelectStyled";
 
-const styles = {
-  select: {
-    color:'white',
-    '.MuiOutlinedInput-notchedOutline': {
-      borderColor: '#7ed957',
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#7ed957',
-    },
-    '& .MuiOutlinedInput-notchedOutline:after': {
-      borderColor: '#7ed957',
-    },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#7ed957',
-    },
-  },
-};
+
 
 const FormSubject = ({ init }) => {
   const [value, setValue] = useState({name: '', surname: '', age: '', gender:'', mental_conditions: []})
@@ -164,7 +148,6 @@ const FormSubject = ({ init }) => {
               onChange={handleChange}
               name="gender"
               variant="outlined"
-              sx={styles.select}
 
             >
               <MenuItem value={'Male'}>Male</MenuItem>

@@ -19,7 +19,7 @@ const TestEEG = ({ state }) => {
       ...status,
       play: true
     })
-    window.lsl.start()
+    window.api.start()
 
   }
 
@@ -28,7 +28,7 @@ const TestEEG = ({ state }) => {
       ...status,
       play: false
     })
-    window.lsl.stop()
+    window.api.stop()
 
 
   }
@@ -36,7 +36,7 @@ const TestEEG = ({ state }) => {
 
   const handlePairBtn = () => {
     
-    window.lsl.searchStreams('device', status.type)
+    window.api.searchStreams('device', status.type)
     .then(e => {
       setStatus({
         ...status,
@@ -50,7 +50,7 @@ const TestEEG = ({ state }) => {
   }
 
   const handleUnpairBtn= () => {
-    window.lsl.closeStream()
+    window.api.closeStream()
     setStatus({
       ...status,
       pair: false,
@@ -66,7 +66,7 @@ const TestEEG = ({ state }) => {
       time: event.target.value
     })
 
-    window.lsl.changeWindow(event.target.value)
+    window.api.changeWindow(event.target.value)
   }
 
   const onChangeLslType = (e) => {

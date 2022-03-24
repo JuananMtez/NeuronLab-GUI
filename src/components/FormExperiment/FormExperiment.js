@@ -216,6 +216,7 @@ const FormExperiment = ({ init }) => {
           />
 
         </Grid>
+       
       </Grid>
       {value.labels.length === 0 &&
         <p style={{color: "#c9382b", fontSize:'20px'}}>* Press enter to add a label</p>

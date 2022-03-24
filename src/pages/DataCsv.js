@@ -3,17 +3,17 @@ import Sidebar from "../components/Sidebar/Sidebar"
 import { useLocation } from "react-router-dom"
 import { Container, Box, Button } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import FormInfoCSV from "../components/DataCSV/FormInfoCSV"
+import PreproccesingCSV from "../components/DataCSV/PreproccesingCSV"
 
 const DataCsv = () => {
 
   const { state } = useLocation()
   const [init, setInit] = useState(state.sidebar)
-  const { csv, experiment } = state
+  const { csv, experiment_id } = state
   const navigate = useNavigate()
 
 
-  const handleClickBack = () => navigate('/experiment/data', { state: {id: experiment, sidebar: state.sidebar}})
+  const handleClickBack = () => navigate('/experiment/data', { state: {id: experiment_id, sidebar: state.sidebar}})
   
 
   return (
@@ -34,7 +34,7 @@ const DataCsv = () => {
           alignItems: 'center',
         }}
         >
-          <FormInfoCSV csv={csv} experiment={experiment}/>
+          <PreproccesingCSV csv={csv} experiment={experiment_id}/>
        </Box>
       </Container>
     </Sidebar>

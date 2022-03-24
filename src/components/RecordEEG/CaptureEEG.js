@@ -13,6 +13,7 @@ import StimulusReceived from "./StimulusReceived";
 
 import { useState } from "react"
 import TextFieldStyled from "../TextFieldStyled/TextFieldStyled";
+import SelectStyled from "../Select/SelectStyled";
 
 const CaptureEEG = ({ state }) => {
 
@@ -45,7 +46,7 @@ const CaptureEEG = ({ state }) => {
   }
 
   const handleSave = () => {
-    window.lsl.save(statusDialog.name, state.subject_id, state.experiment.id)
+    window.api.save(statusDialog.name, state.subject_id, state.experiment.id)
     navigate('/experiment/data', { state: {id: state.experiment.id, sidebar:false}})
 
   }
@@ -56,7 +57,7 @@ const CaptureEEG = ({ state }) => {
       ...status,
       play: true,
     })
-    window.lsl.start()
+    window.api.start()
 
   }
 
@@ -65,14 +66,14 @@ const CaptureEEG = ({ state }) => {
       ...status,
       play: false
     })
-    window.lsl.stop()
+    window.api.stop()
   }
 
 
   const handlePairDeviceBtn = () => {
 
     
-    window.lsl.searchStreams('device', status.typeDevice)
+    window.api.searchStreams('device', status.typeDevice)
     .then(e => {
       setStatus({
         ...status,
@@ -83,7 +84,7 @@ const CaptureEEG = ({ state }) => {
 
   const handlePairStimulusBtn = () => {
 
-    window.lsl.searchStreams('stimulus', status.nameStimulus)
+    window.api.searchStreams('stimulus', status.nameStimulus)
     .then(e => {
       setStatus({
         ...status,
@@ -93,7 +94,7 @@ const CaptureEEG = ({ state }) => {
   }
 
   const handleUnpairDeviceBtn = () => {
-    window.lsl.closeStream()
+    window.api.closeStream()
     setStatus({
       ...status,
       pairDevice: false,
@@ -102,7 +103,7 @@ const CaptureEEG = ({ state }) => {
   }
 
     const handleUnpairStimulusBtn = () => {
-      window.lsl.closeStreamStimulus()
+      window.api.closeStreamStimulus()
       setStatus({
         ...status,
         pairStimulus: false,
@@ -116,7 +117,7 @@ const CaptureEEG = ({ state }) => {
       time: event.target.value
     })
 
-    window.lsl.changeWindow(event.target.value)
+    window.api.changeWindow(event.target.value)
   }
 
   const handleSelectProtocol = (event) => {
@@ -161,9 +162,9 @@ const CaptureEEG = ({ state }) => {
     
 
     if (protocol === 'udp')
-      window.lsl.startStimulusUDPRecording(status.portUdp)
+      window.api.startStimulusUDPRecording(status.portUdp)
     else 
-      window.lsl.startStimulusLSLRecording()
+      window.api.startStimulusLSLRecording()
 
 
     setStatus({
@@ -176,9 +177,9 @@ const CaptureEEG = ({ state }) => {
   const handleStopRecording = () => {
 
     if (protocol === 'udp')
-      window.lsl.stopStimulusUDPRecording()
+      window.api.stopStimulusUDPRecording()
     else 
-      window.lsl.stopStimulusLSLRecording()
+      window.api.stopStimulusLSLRecording()
 
     setStatus({
       ...status,
@@ -187,12 +188,12 @@ const CaptureEEG = ({ state }) => {
   }
 
   const handleReset = () => {
-    window.lsl.closeAll()
+    window.api.closeAll()
     setStatus({play: false, recording: false, hasRecorded: false, pairDevice: false, time:5, typeDevice:'', nameStimulus:'', pairStimulus: false, portUdp:0, showStimulus: false })
   }
 
   const handleClickBack = () => {
-    window.lsl.closeAll()
+    window.api.closeAll()
     navigate('/experiment/data', { state: {id: state.experiment.id, sidebar:false}})
 
   }
@@ -212,7 +213,7 @@ const CaptureEEG = ({ state }) => {
       <Grid item xs={6} sx={{ml:2}}>
         <FormControl >
           <InputLabel id="demo-simple-select-label">Window</InputLabel>
-            <Select
+            <SelectStyled
               labelId="de-label"
               id="demo-simple-select"
               value={status.time}
@@ -226,7 +227,7 @@ const CaptureEEG = ({ state }) => {
               <MenuItem value={10}>10 sec</MenuItem>
               <MenuItem value={20}>20 sec</MenuItem>
 
-            </Select>
+            </SelectStyled>
         </FormControl>
       </Grid>
 
@@ -334,7 +335,7 @@ const CaptureEEG = ({ state }) => {
     <Grid item xs={3} sx={{ml:'2vh'}}>
       <FormControl fullWidth >
         <InputLabel id="demo-simpl-label">Protocol</InputLabel>
-        <Select
+        <SelectStyled
           labelId="de-"
           id="demo--select"
           value={protocol}
@@ -347,7 +348,7 @@ const CaptureEEG = ({ state }) => {
           <MenuItem value={'lsl'}>LSL</MenuItem>
           <MenuItem value={'udp'}>UDP</MenuItem>
 
-        </Select>
+        </SelectStyled>
       </FormControl>
     </Grid>
     <Grid item xs={9}>

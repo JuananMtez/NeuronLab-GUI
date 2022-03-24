@@ -53,7 +53,7 @@ const TableEEG = memo(({ device, play, pair}) => {
     }
 
     if (isMounted) 
-      interval = setInterval(() => {setItems(window.lsl.getVolts())}, 100)
+      interval = setInterval(() => {setItems(window.api.getVolts())}, 100)
     
     return () => {
       isMounted = false
