@@ -1,10 +1,13 @@
 const { default: axios } = require('axios');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const { download } = require('electron-dl');
 
+
+let win;
 let progressProccessing
 function createWindow() {
-   const win = new BrowserWindow(
+    win = new BrowserWindow(
       {
         width: 900, 
         height: 680,
@@ -19,7 +22,7 @@ function createWindow() {
           icon: null
         });
       })
-
+      
 
       
       
@@ -44,3 +47,12 @@ app.on('activate', () => {
 })
 
 
+ipcMain.on('download-button', async (event, {url}) => {
+  const a = BrowserWindow.getFocusedWindow();
+  await download(a, url)
+  dialog.showMessageBox(win, {
+    message: 'CSV downloaded',
+    icon: null
+  });
+
+});

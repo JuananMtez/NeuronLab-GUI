@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import SelectUnstyled, { selectUnstyledClasses } from '@mui/base/SelectUnstyled';
+import MultiSelectUnstyled from '@mui/base/MultiSelectUnstyled';
+import { selectUnstyledClasses } from '@mui/base/SelectUnstyled';
 import OptionUnstyled, { optionUnstyledClasses } from '@mui/base/OptionUnstyled';
 import PopperUnstyled from '@mui/base/PopperUnstyled';
 import { styled } from '@mui/system';
@@ -32,11 +33,11 @@ const StyledButton = styled('button')(
   font-size: 0.875rem;
   box-sizing: border-box;
   min-height: calc(1.5em + 22px);
-  min-width: 240px;
+  min-width: 320px;
   background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
   border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
   border-radius: 0.75em;
-  margin-top: 0.5em;
+  margin: 0.5em;
   padding: 10px;
   text-align: left;
   line-height: 1.5;
@@ -122,16 +123,7 @@ const StyledPopper = styled(PopperUnstyled)`
   z-index: 1;
 `;
 
-const Paragraph = styled('p')(
-  ({ theme }) => `
-  font-family: IBM Plex Sans, sans-serif;
-  font-size: 0.875rem;
-  margin: 10px 0;
-  color: ${theme.palette.mode === 'dark' ? grey[400] : grey[700]};
-  `,
-);
-
-function CustomSelect(props) {
+const CustomMultiSelect = React.forwardRef(function CustomMultiSelect(props, ref) {
   const components = {
     Root: StyledButton,
     Listbox: StyledListbox,
@@ -139,10 +131,10 @@ function CustomSelect(props) {
     ...props.components,
   };
 
-  return <SelectUnstyled {...props} components={components} />;
-}
+  return <MultiSelectUnstyled {...props} ref={ref} components={components} />;
+});
 
-CustomSelect.propTypes = {
+CustomMultiSelect.propTypes = {
   /**
    * The components used for each slot inside the Select.
    * Either a string to use a HTML element or a component.
@@ -155,4 +147,5 @@ CustomSelect.propTypes = {
   }),
 };
 
-export { CustomSelect, StyledOption }
+export {CustomMultiSelect, StyledOption}
+

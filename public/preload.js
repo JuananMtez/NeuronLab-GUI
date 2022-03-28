@@ -12,10 +12,12 @@ const path = require('path')
 // LSL Device stream
 let streamsEEG = null;
 let streamInletEEG = null;
+let timeCorrection = 0
 
 // LSL Stimulus stream
 let streamsStimulus = null
 let streamInletStimulus = null;
+
 
 // UDP Stimulus stream
 let server = null
@@ -49,7 +51,7 @@ const getDataFromLSL = () => {
         if (recording) {
             dataInput.push(dataOriginal)
             timestamp = timestamp.concat(timestamps)
-            if (timestamp.length > 2500) {
+            if (timestamp.length > 30000) {
                 fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
                 initArraysRecording()
                 cont++;
@@ -88,6 +90,7 @@ const clear = () => {
 
     streamsEEG = null;
     streamInletEEG = null;
+    timeCorrection = 0
     
     // LSL Stimulus stream
     streamsStimulus = null
@@ -126,6 +129,7 @@ contextBridge.exposeInMainWorld('api', {
 
         if (streamsEEG !== null && streamsEEG.length > 0) {
             streamInletEEG = new lsl.StreamInlet(streamsEEG[0]);
+            //timeCorrection = streamInletEEG.timeCorrection()
             interval = setInterval(getDataFromLSL, 0);
         } 
     },
@@ -133,7 +137,7 @@ contextBridge.exposeInMainWorld('api', {
     stop: () => {
         if (streamInletEEG !== null) {
             clearInterval(interval);
-            streamInletEEG = null;
+            //streamInletEEG = null;
         }
     },
 
@@ -157,7 +161,7 @@ contextBridge.exposeInMainWorld('api', {
             const {stimulus, timestamp} = JSON.parse(msg)
             stimuli.push([stimulus, timestamp])
            // if (stimulus != '0') {
-            stimuliAlwaysMemory.push({stimulus: stimulus, timestamp: timestamp})
+            stimuliAlwaysMemory.push({stimulus: stimulus[0], timestamp: timestamp})
             //}
 
         });
@@ -241,32 +245,78 @@ contextBridge.exposeInMainWorld('api', {
     save: (name, subject_id, experiment_id) => {
         
         fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
-
+        console.log('entro')
         const form = new FormData();
         let names = fs.readdirSync('tmp')
-        console.log(names)
         for (let i = 0; i < names.length; i++)
             form.append('files', fs.createReadStream(path.join('tmp', names[i])))
 
+            console.log('entro2')
 
-        axios.post(`http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}`, form, {
+        timeCorrection = streamInletEEG.timeCorrection()
+        console.log('entr3 ' + timeCorrection)
+
+        axios({
+            method: 'post',
+            url: `http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
+            data: form,
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity,
             headers: {
-              ...form.getHeaders()
+                ...form.getHeaders()
             },
             adapter: require('axios/lib/adapters/http')
-            }).then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
-            .catch((error => ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')))
-            .finally(() => clear())
+        }).then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
+        .catch((error => {
+            console.log(error)
+            ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')
+        })).finally(() => clear())
            
-        },
+    },
 
-        applyFilter: (msg) => {
-            axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
-            .then(response => ipcRenderer.send('open_dialog', 'Preproccessing applied correctly'))
+    applyFilter: (msg) => {
+        axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
+        .then(response => ipcRenderer.send('open_dialog', 'Preproccessing applied correctly'))
 
-            .catch(error => ipcRenderer.send('open_dialog', 'An error occurred during processing'))
-        }
-    
+        .catch(error => ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred'))
+    },
+
+    applyIca: (id_csv, msg) => {
+        axios.post(`http://127.0.0.1:8000/csv/${id_csv}/ica/apply`, msg, { adapter: require('axios/lib/adapters/http')}) 
+        .then(response => ipcRenderer.send('open_dialog', 'Components excluded correctly'))
+
+        .catch(error => ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred'))
+    },
+
+    downloadCSV: (idCSV) => {
+
+        ipcRenderer.send('download-button', {url: `http://localhost:8000/csv/${idCSV}/download`}) 
+    },
+
+    applyTrainingMachine: (msg) => {
+        axios.post(`http://localhost:8000/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
+        .then(response => ipcRenderer.send('open_dialog', 'Training model created'))
+        .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
+    },
+
+    applyTrainingDeep: (msg) => {
+        axios.post(`http://localhost:8000/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
+        .then(response => ipcRenderer.send('open_dialog', 'Training model created'))
+        .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
+    },
+
+
+    applyFeature: (msg) => {
+        axios.post('http://127.0.0.1:8000/csv/feature/list', msg, { adapter: require('axios/lib/adapters/http')}) 
+        .then(response => ipcRenderer.send('open_dialog', 'Feature extraction applied correctly'))
+
+        .catch(error => {
+            console.log(error.response)
+            ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
+        } )
+    },
+
+
     
     
 

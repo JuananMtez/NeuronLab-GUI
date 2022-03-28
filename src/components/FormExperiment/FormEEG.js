@@ -68,7 +68,7 @@ const FormEEG = ({ device, handleDevice, columnsEEG, rows, channels, handleChann
             <h2 style={{color: 'white'}}>Channels</h2>
           </Grid>
           <Grid item xs={4} sx={{mt:0}}>
-            <Table columns={columnsEEG} rows={rows} loading={false} rowsSelected={handleChannel} showCheck={true} height='41vh' rowPerPage={5}/>
+            <Table columns={columnsEEG} rows={rows} loading={false} rowsSelected={handleChannel} showCheck={true} height='58vh' rowPerPage={8}/>
           </Grid>
           <Grid item xs={8} />
 

@@ -41,7 +41,6 @@ const FormLogin = () => {
       localStorage.setItem("user", JSON.stringify(response.data));
       navigate('../home')
     }).catch(error => {
-      console.log(error.response)
       if (error.response.status === 404) {
         setShowError(true)
         setValue({ user: '', password: ''})
@@ -51,7 +50,6 @@ const FormLogin = () => {
 
   return (
     <Box sx={{mt:'7vh'}}>
-
       <TextFieldStyled 
         fullWidth 
         margin="normal" 

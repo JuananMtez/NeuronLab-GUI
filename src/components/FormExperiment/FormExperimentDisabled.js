@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid';
 import  Container  from "@mui/material/Container"
 import TextFieldStyled from "../TextFieldStyled/TextFieldStyled";
 import Button from '@mui/material/Button';
-import { Stack } from "@mui/material";
 import { useState } from "react";
 import FormInfoExperiment from './FormInfoExperiment'
 import CSVTable from "../CSV/CSVTable";
@@ -18,6 +17,7 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
   const [csvSelected, setCsvSelected] = useState([])
 
   const [form, setForm] = useState({showProccessing: false, showFeatureExtraction: false})
+
 
   const handleReload = () => {
     axios.get(`http://localhost:8000/csv/${data.id}`)
@@ -136,34 +136,37 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
               handleData={handleExperiments}
               sidebar={init}
               rowsSelected={setCsvSelected}
+              showPreproccessing={form.showProccessing}
+              showFeature={form.showFeatureExtraction}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{mb:'5vh'}}>
             <ReloadButton 
               handleReloadClick={handleReload}
             />
           </Grid>
-          <Grid item xs={12} sx={{mt:'4vh'}}>
-            <Stack direction="row" spacing={2}>
-              <Button 
-                variant="contained"
-                color={form.showProccessing ? 'error': 'info'}
-                onClick={handleShowPreproccessing}
-                size="small"
+          <Grid item xs={6}>
+            <Button 
+              variant="contained"
+              color={form.showProccessing ? 'error': 'info'}
+              onClick={handleShowPreproccessing}
+              size="small"
+              fullWidth
 
-              >
-                {form.showProccessing ? 'Hide form Preproccessing' : 'Form Preproccessing'}
-              </Button>
-              <Button 
-                variant="contained"
-                color={form.showFeatureExtraction  ? 'error': 'secondary'}
-                size="small"
-                onClick={handleShowFeatureExtraction}
-              >
-                {form.showFeatureExtraction ? 'Hide Info' : 'Show Info'}
-              </Button>
-            </Stack>
-
+            >
+              {form.showProccessing ? 'Hide form Preproccessing' : 'Form Preproccessing'}
+            </Button>
+          </Grid>
+          <Grid item xs={6} >
+            <Button 
+              variant="contained"
+              color={form.showFeatureExtraction  ? 'error': 'secondary'}
+              size="small"
+              onClick={handleShowFeatureExtraction}
+              fullWidth
+            >
+              {form.showFeatureExtraction ? 'Hide form Feature Extraction' : 'Form Feature Extraction'}
+            </Button>
 
           </Grid>
           <Grid item xs={12} sx={{mt:'5vh'}}>

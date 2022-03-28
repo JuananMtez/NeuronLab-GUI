@@ -30,46 +30,70 @@ const FormPreproccessing = ({ csvs }) => {
   const [filterMethod, setFilterMethod] = useState('')
   const [filterType, setFilterType] = useState('')
   const [filter, setFilter] = useState({ low: '', high: '' })
-  const [filtersNotch, setFiltersNotch] = useState([])
   const [filterNotch, setFilterNotch] = useState('')
   const [filterDownSampling, setFilterDownSampling] = useState('')
   const [preproccessings, setPreproccessings] = useState([])
+  const [phase, setPhase] = useState('')
+  const [order, setOrder] = useState('')
 
 
-  const handleKeyDown = (event) => {
 
-    if (event.key === 'Enter') {
-      if (filtersNotch.filter(e => e === filterNotch).length === 0) {
-        let list = [...filtersNotch]
-        list.push(filterNotch)
-        setFiltersNotch(list)
-        setFilterNotch('')
-      }
-    }
-  }
-
-  const handleDeleteChip = (e, v) => {
-    e.preventDefault()
-    let list = [...filtersNotch]
-    setFiltersNotch(list.filter(f => f !== v))   
-  }
   const handleDeleteProccesingChip = (e, index) => {
     let list = [...preproccessings]
-    list.splice(index, 1); // 2nd parameter means remove one item only
+    list.splice(index, 1)
     setPreproccessings(list)
   }
 
 
+  const getLabelFilterMethod = () => {
+    switch(filterMethod){
+      case 'fir':
+        return (
+          <Box sx={{ml:'2vh'}}>
+            <CustomSelect renderValue={o => renderValue(o, 'Phase')} value={phase} onChange={setPhase}>
+              <StyledOption value={'zero'}>Zero</StyledOption>
+              <StyledOption value={'zero-double'}>Zero-Double</StyledOption>
+              <StyledOption value={'minimum'}>Minimum</StyledOption>
+            </CustomSelect> 
+          </Box>
+        )
+      case 'iir':
+        return (
+            <Box sx={{ml:'2vh'}}>
+               <TextFieldStyled
+              name="order"
+              label="Order"
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">th</InputAdornment>
+                )
+              }}
+            />
+            </Box>
+
+        )
+      default:
+        return
+    }
+   
+      
+  }
   const handleAddPreproccessing = () => {
 
     let prep;
     if (preproccesing === 'filtering') {
       if (filterType === 'bandpass') {
-        prep = {preproccessing:'filtering', filter_type: 'bandpass', filter_method: filterMethod, low_freq: filter.low, high_freq: filter.high}
+        prep = {preproccessing:'filtering', filter_type: 'bandpass', filter_method: filterMethod, order: order, phase: phase, low_freq: filter.low, high_freq: filter.high}
       } else if (filterType === 'notch')
-        prep = {preproccessing:'filtering', filter_type: 'notch', filter_method: filterMethod, freqs:filtersNotch}
+        prep = {preproccessing:'filtering', filter_type: 'notch', order: order, phase: phase, filter_method: filterMethod, freq:filterNotch}
     } else if (preproccesing === 'downsampling')
-      prep = {preproccessing:'downsampling', freq:filterDownSampling}
+      prep = {preproccessing:'downsampling', freq_downsampling:filterDownSampling}
 
     let list = [...preproccessings]
     list.push(prep)
@@ -80,14 +104,15 @@ const FormPreproccessing = ({ csvs }) => {
     setFilterType('')
     setFilterMethod('')
     setFilterNotch('')
-    setFiltersNotch([])
     setFilterDownSampling('')
     setFilter({low: '', high: ''})
+    setOrder('')
+    setPhase('')
+    
   }
   const handleApply = () => {
-    setPreproccessings([])
     window.api.applyFilter({csvs: csvs, preproccessings: preproccessings})
-
+    setPreproccessings([])
   }
 
   return (
@@ -115,6 +140,7 @@ const FormPreproccessing = ({ csvs }) => {
                 <StyledOption value={'fir'}>FIR</StyledOption>
               </CustomSelect>
             </Box>
+            {getLabelFilterMethod()}
           </Stack>
         </Grid>
       }
@@ -160,7 +186,6 @@ const FormPreproccessing = ({ csvs }) => {
       {
         preproccesing === 'filtering' && filterType === 'notch' &&
         (
-          <>
             <Grid item xs={12} sx={{ mt: 3 }}>
 
               <TextFieldStyled
@@ -168,7 +193,6 @@ const FormPreproccessing = ({ csvs }) => {
                 label="Frequency"
                 value={filterNotch}
                 onChange={(e) => setFilterNotch(e.target.value)}
-                onKeyDown={handleKeyDown}
                 type="number"
                 InputLabelProps={{
                   shrink: true,
@@ -180,23 +204,10 @@ const FormPreproccessing = ({ csvs }) => {
                 }}
               />
             </Grid>
-
-            <Grid item xs={12}>
-              <Stack direction="row" spacing={2}>
-                {filtersNotch.map((e, index) => <Chip onDelete={ev => handleDeleteChip(ev, e)} key={index} label={`${e} Hz`} />)}
-                </Stack>
-            </Grid>
-          </>
         )
 
       }
-      {
-          preproccesing === 'filtering' && filterType === 'notch' && filtersNotch.length === 0 &&
 
-        <Grid item xs={12}>
-          <p style={{color: "#c9382b", fontSize:'20px', marginLeft:'2vh'}}>* Press enter to add a frequency</p>
-        </Grid>
-      }
       {
         preproccesing === 'downsampling' &&
         <Grid item xs={12} sx={{mt:3}}>
@@ -223,8 +234,11 @@ const FormPreproccessing = ({ csvs }) => {
           variant="contained"
           disabled={preproccesing === '' || 
             (preproccesing === 'filtering' && (filterType === '' || filterMethod === '')) || 
+            (preproccesing === 'filtering' && filterMethod === 'fir' && phase === '') ||
+            (preproccesing === 'filtering' && filterMethod ===  'iir' && order === '') ||
+            (preproccesing === 'filtering' && filterMethod ===  'iir' && order < 0) ||
             (preproccesing === 'filtering' && filterType === 'bandpass' && filter.high === '' && filter.low === '')||
-            (preproccesing === 'filtering' && filterType === 'notch' && filtersNotch.length === 0)
+            (preproccesing === 'filtering' && filterType === 'notch' && filterNotch === '')
             
           }
           onClick={handleAddPreproccessing}
@@ -233,8 +247,8 @@ const FormPreproccessing = ({ csvs }) => {
         </Button>
       </Grid>
           {preproccessings.map((e, index) => (
-          <Grid  item xs={12} sx={{mt:1}}>
-            <Chip key={index} onDelete={ev => handleDeleteProccesingChip(ev, index)} sx={{color:'white'}} label={`${index+1}. ${JSON.stringify(e, null, 4)}`} />
+          <Grid  key={index} item xs={12} sx={{mt:1}}>
+            <Chip onDelete={ev => handleDeleteProccesingChip(ev, index)} sx={{color:'white'}} label={`${index+1}. ${JSON.stringify(e, null, 4)}`} />
           </Grid>
 
           ))}

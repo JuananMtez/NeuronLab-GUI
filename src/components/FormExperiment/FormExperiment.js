@@ -212,6 +212,10 @@ const FormExperiment = ({ init }) => {
             value={label}
             name="label"
             label="Label"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
             fullWidth        
           />
 

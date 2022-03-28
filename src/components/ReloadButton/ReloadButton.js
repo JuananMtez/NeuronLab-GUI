@@ -1,5 +1,5 @@
 import IconButton from '@mui/material/IconButton';
-import { AddBoxSharp, ReplaySharp } from '@mui/icons-material'
+import { ReplaySharp } from '@mui/icons-material'
 
 const ReloadButton = ({ handleReloadClick }) => {
   return (
