@@ -1,19 +1,21 @@
-const { default: axios } = require('axios');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { download } = require('electron-dl');
 
 
 let win;
-let progressProccessing
 function createWindow() {
+  console.log(path.join(__dirname, 'icon.icns'))
+
     win = new BrowserWindow(
       {
         width: 900, 
         height: 680,
+        icon: path.join(__dirname, 'icon.icns'),
         webPreferences: {
           preload: path.join(__dirname, 'preload.js')
         }
+
       });
 
       ipcMain.on('open_dialog', (event, text) => {

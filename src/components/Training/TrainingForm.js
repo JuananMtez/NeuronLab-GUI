@@ -8,14 +8,14 @@ import DialogStyled from '../Dialog/DialogStyled'
 
 
 
-const TrainingForm = ({ csv }) => {
+const TrainingForm = ({ csv, experiment }) => {
 
   const [learning, setLearning] = useState('')
   const [algorithmMachine, setAlgorithmMachine] = useState('')
   const [knnNeigbour, setKnnNreigbour] = useState(0)
   const [randomForest, setRandomeForest] = useState({max_depth: 0, n_estimators: 0, random_state: 0})
   const [svm, setSvm] = useState('')
-  const [percent, setPercent] = useState({training_data: 0, testing_data: 0})
+  const [percent, setPercent] = useState({training_data: 0 /*testing_data: 0*/})
   const [name, setName] = useState('')
   const [csvsSelected, setCsvsSelected] = useState([])
   const [open, setOpen] = useState(false)
@@ -30,9 +30,8 @@ const TrainingForm = ({ csv }) => {
     let list = [...csvsSelected, csv.id]
 
 
-    let data = {name: name, csvs: list, testing_data: percent.testing_data, training_data: percent.training_data}
+    let data = {name: name, csvs: list, /*testing_data: percent.testing_data,*/ training_data: percent.training_data, exp_id: experiment.id}
     let algorithm;
-    console.log(list)
     if (learning === 'machine') {
       switch(algorithmMachine){
         case 'KNN':
@@ -59,9 +58,8 @@ const TrainingForm = ({ csv }) => {
     setKnnNreigbour(0)
     setRandomeForest({max_depth: 0, n_estimators: 0, random_state: 0})
     setSvm('')
-    setPercent({training_data: 0, testing_data: 0})
+    setPercent({training_data: 0, /*testing_data: 0*/})
     setName('')
-    setCsvsSelected([])
 
   
   }
@@ -178,8 +176,10 @@ const TrainingForm = ({ csv }) => {
                 <InputAdornment position="end">%</InputAdornment>
               )
             }}
-          />    
-            <TextFieldStyled
+          />
+          {
+            /*
+                        <TextFieldStyled
             value={percent.testing_data}
             name="testing_data"
             label="Testing data"      
@@ -190,13 +190,15 @@ const TrainingForm = ({ csv }) => {
                 <InputAdornment position="end">%</InputAdornment>
               )
             }}
-          />     
+          />    */
+          }    
+ 
         </Stack>
       </Grid>
       <Grid item xs={12} sx={{mt:'3vh'}}>
         <h3 style={{color:'white'}}>Selectables CSVs</h3>
       </Grid>
-      <Grid item xs={7}>
+      <Grid item xs={10}>
         <TableCSVPositions csvid={csv.id} csvsSelected={setCsvsSelected}/>  
       </Grid>
       <Grid item xs={12} sx={{mt:'4vh'}}>
@@ -209,7 +211,7 @@ const TrainingForm = ({ csv }) => {
             learning === '' || 
             algorithmMachine === '' ||
             (algorithmMachine === 'SVM' && svm === '') ||
-            ((parseInt(percent.training_data) + parseInt(percent.testing_data) !== 100))
+            (parseInt(percent.training_data)  === 0)
 
           }
           >

@@ -7,12 +7,13 @@ import Slide from '@mui/material/Slide';
 import { forwardRef } from 'react';
 import { Button } from '@mui/material';
 import TextFieldStyled from '../TextFieldStyled/TextFieldStyled';
+import { LoadingButton } from '@mui/lab';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogStyled = ({ title, description, open, handleClose, text, handleText, handleClick }) => {
+const DialogStyled = ({ title, description, open, handleClose, text, handleText, handleClick, loading }) => {
   return (
     <Dialog
       open={open}
@@ -42,8 +43,8 @@ const DialogStyled = ({ title, description, open, handleClose, text, handleText,
           />
       </DialogContent>
       <DialogActions>
-        <Button size="small" variant="contained" onClick={handleClose}color="error">Cancel</Button>
-        <Button disabled={text.length === 0 ? true : false} size="small" variant="contained" onClick={handleClick}>Accept</Button>
+        <Button size="small" disbled={loading} variant="contained" onClick={handleClose}color="error">Cancel</Button>
+        <LoadingButton disabled={text.length === 0 || text.length > 9 ? true : false} loading={loading} size="small" variant="contained" onClick={handleClick}>Accept</LoadingButton>
       </DialogActions>
     </Dialog>
   )

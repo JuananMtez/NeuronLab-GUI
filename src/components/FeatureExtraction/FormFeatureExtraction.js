@@ -21,7 +21,6 @@ const FormFeatureExtraction = ({csvs}) => {
   const handleClick = () => {
     
     let msg = {csvs: csvs, feature: feature}
-    console.log(msg)
     window.api.applyFeature(msg)
     setFeature('')
   }
@@ -34,7 +33,8 @@ const FormFeatureExtraction = ({csvs}) => {
       <CustomSelect renderValue={o => renderValue(o, 'Feature')} value={feature} onChange={setFeature}>
         <StyledOption value={'mean'}>Mean</StyledOption>
         <StyledOption value={'variance'}>Variance</StyledOption>
-
+        <StyledOption value={'deviation'}>Standard Deviation</StyledOption>
+        <StyledOption value={'psd'}>Power Spectral Density</StyledOption>
       </CustomSelect> 
       </Grid>
       <Grid item xs={12} sx={{mt:'5vh'}}>

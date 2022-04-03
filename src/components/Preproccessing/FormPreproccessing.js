@@ -5,6 +5,7 @@ import { CustomSelect, StyledOption } from "../Select/CustomSelect";
 import TextFieldStyled from "../TextFieldStyled/TextFieldStyled";
 import InputAdornment from '@mui/material/InputAdornment';
 import Chip from '@mui/material/Chip';
+import { LoadingButton } from "@mui/lab";
 
 
 
@@ -111,6 +112,7 @@ const FormPreproccessing = ({ csvs }) => {
     
   }
   const handleApply = () => {
+
     window.api.applyFilter({csvs: csvs, preproccessings: preproccessings})
     setPreproccessings([])
   }

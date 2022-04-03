@@ -5,13 +5,12 @@ const ChartEEG = ({ items, color }) => {
   return (
 
     <LineChart 
-      width={1130} 
+      width={1000} 
       height={50} 
       data={items}
     >
       <Line type="monotone" dataKey="pv" isAnimationActive={false} stroke={color} dot={false}/>
     </LineChart>
-
   )
 }
 

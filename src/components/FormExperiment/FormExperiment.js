@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box"
 import Grid from '@mui/material/Grid';
 import TextFieldStyled from '../TextFieldStyled/TextFieldStyled'
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import  Container  from "@mui/material/Container"
 import Chip from '@mui/material/Chip';
 import axios from "axios";
@@ -28,10 +28,10 @@ const FormExperiment = ({ init }) => {
   const [device, setDevice] = useState('')
   const [valueDevice, setValueDevice] = useState({name: '', sample_rate: '', channels_count: ''})
   const [channels, setChannels] = useState([])
-
+  const [epoch, setEpoch] = useState({start_epoch:'', end_epoch:''})
   const navigate = useNavigate()
 
-  let disabled = value.name === '' || value.description === '' 
+  let disabled = value.name === '' || value.description === ''  || epoch.start_epoch === '' || epoch.end_epoch === ''
               || channels.length !== valueDevice.channels_count  || valueDevice.name === '' || (value.labels.filter(e => e.description === '' ).length > 0)
 
   useEffect(() => {
@@ -66,12 +66,15 @@ const FormExperiment = ({ init }) => {
   const handleChangeLabel = (ev, index) => {
     ev.preventDefault()
 
-    let list = value.labels
-    list[index]={...list[index], description: ev.target.value}
-    setValue({
-      ...value,
-      labels: list
-    })
+    if (!ev.target.value.includes(' ')) {
+      let list = value.labels
+      list[index]={...list[index], description: ev.target.value}
+      setValue({
+        ...value,
+        labels: list
+      })
+    }
+
 
   }
 
@@ -152,6 +155,8 @@ const FormExperiment = ({ init }) => {
       name: value.name, 
       description: value.description, 
       researcher_creator_id: user.id, 
+      epoch_start: epoch.start_epoch,
+      epoch_end: epoch.end_epoch,
       labels: value.labels, 
       device: {
         name: valueDevice.name, 
@@ -253,7 +258,35 @@ const FormExperiment = ({ init }) => {
 
 
  
-      <Grid container spacing={1}>
+      <Grid container spacing={1} sx={{mt:'10vh'}}>
+        <Grid item xs={12}>
+          <Stack direction="row" spacing={2}>
+          <TextFieldStyled 
+          
+          required
+          value={epoch.start_epoch}
+          onChange={(e) => setEpoch({...epoch, [e.target.name]: e.target.value})}
+          name="start_epoch"
+          type="number"
+          label="Epoch Start"
+
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}}
+           />
+                   <TextFieldStyled 
+          
+          required
+          value={epoch.end_epoch}
+          type="number"
+          onChange={(e) => setEpoch({...epoch, [e.target.name]: e.target.value})}          
+          name="end_epoch"
+          label="Epoch End"
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}}
+          />
+          </Stack>
+
+        </Grid>
+
+
         <Grid item xs={12} sx={{mt:5}}>
           <h2 style={{color: 'white'}}>Subjects</h2>
         </Grid>

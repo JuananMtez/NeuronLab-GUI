@@ -10,7 +10,7 @@ const TableCSVPositions = ({ csvid, csvsSelected }) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csvid !== undefined) {
-      axios.get(`http://localhost:8000/csv/${csvid}/same`)
+      axios.get(`http://localhost:8000/csv/${csvid}/same_features`)
       .then(response => {
         setCsvs(response.data)
         setLoadingTraining(false)
@@ -24,7 +24,9 @@ const TableCSVPositions = ({ csvid, csvsSelected }) => {
   const columns = [
   
     { field: 'name', headerName: 'Name', width: 250, headerAlign: 'center', sortable: false},
-    { field: 'subject_name', headerName: 'Subject', width: 150, headerAlign: 'center', sortable: false},
+    { field: 'subject_name', headerName: 'Subject', width: 300, headerAlign: 'center', sortable: false},
+    { field: 'date', headerName: 'Date', width: 200, headerAlign: 'center', sortable: false},
+
   ]
 
   return (

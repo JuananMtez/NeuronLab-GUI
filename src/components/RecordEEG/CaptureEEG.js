@@ -16,7 +16,6 @@ import TextFieldStyled from "../TextFieldStyled/TextFieldStyled";
 import SelectStyled from "../Select/SelectStyled";
 
 const CaptureEEG = ({ state }) => {
-
   const [status, setStatus] = useState(
     { play: false, recording: false, hasRecorded: false, pairDevice: false, time:5, typeDevice:'', nameStimulus:'', pairStimulus: false, portUdp:0, showStimulus: false }
   )
@@ -162,7 +161,7 @@ const CaptureEEG = ({ state }) => {
     
 
     if (protocol === 'udp')
-      window.api.startStimulusUDPRecording(status.portUdp)
+      window.api.startStimulusUDPRecording(status.portUdp, state.experiment.labels)
     else 
       window.api.startStimulusLSLRecording()
 
@@ -391,6 +390,7 @@ const CaptureEEG = ({ state }) => {
           text={statusDialog.name}
           handleText={handleName}
           handleClick={handleSave}
+          loading={false}
           title="Save CSV"
           description="Write a name for the new CSV"
         />

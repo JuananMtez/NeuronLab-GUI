@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-const lsl = require('../../lsl/index')
+const lsl = require('lsl.js')
 const dgram = require('dgram');
 
 var FormData = require('form-data');
@@ -155,14 +155,25 @@ contextBridge.exposeInMainWorld('api', {
 
     },
 
-    startStimulusUDPRecording: (port) => {
+    startStimulusUDPRecording: (port, labels) => {
         server = dgram.createSocket('udp4');
         server.on('message', (msg, rinfo) => {
             const {stimulus, timestamp} = JSON.parse(msg)
-            stimuli.push([stimulus, timestamp])
-           // if (stimulus != '0') {
-            stimuliAlwaysMemory.push({stimulus: stimulus[0], timestamp: timestamp})
-            //}
+            if (Array.isArray(stimulus)) {
+                if (typeof stimulus[0] == 'number' && !isNaN(stimulus[0]) && Number.isInteger(stimulus[0])) {
+                    if (labels.filter(l => l.label == stimulus[0]).length === 1) {
+                        stimuli.push([stimulus, timestamp])
+                        stimuliAlwaysMemory.push({stimulus: stimulus[0], timestamp: timestamp})
+                    } else 
+                    ipcRenderer.send('open_dialog', `Stimulus with value ${stimulus[0]} is not valid. Please, type in a valid stimulus and reset`)
+
+
+                } else 
+                    ipcRenderer.send('open_dialog', 'Stimulus data must be a integer value in a array. [int]')
+            } else {
+                ipcRenderer.send('open_dialog', 'Stimulus data must be a integer value in a array. [int]')
+            }
+            
 
         });
 
@@ -245,20 +256,17 @@ contextBridge.exposeInMainWorld('api', {
     save: (name, subject_id, experiment_id) => {
         
         fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
-        console.log('entro')
         const form = new FormData();
         let names = fs.readdirSync('tmp')
         for (let i = 0; i < names.length; i++)
             form.append('files', fs.createReadStream(path.join('tmp', names[i])))
 
-            console.log('entro2')
-
         timeCorrection = streamInletEEG.timeCorrection()
-        console.log('entr3 ' + timeCorrection)
 
         axios({
             method: 'post',
             url: `http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
+
             data: form,
             maxBodyLength: Infinity,
             maxContentLength: Infinity,
@@ -268,7 +276,6 @@ contextBridge.exposeInMainWorld('api', {
             adapter: require('axios/lib/adapters/http')
         }).then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
         .catch((error => {
-            console.log(error)
             ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')
         })).finally(() => clear())
            
@@ -311,7 +318,6 @@ contextBridge.exposeInMainWorld('api', {
         .then(response => ipcRenderer.send('open_dialog', 'Feature extraction applied correctly'))
 
         .catch(error => {
-            console.log(error.response)
             ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
         } )
     },

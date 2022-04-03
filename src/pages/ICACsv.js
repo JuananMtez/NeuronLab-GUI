@@ -1,4 +1,4 @@
-import { useState, useRef} from "react"
+import { useState } from "react"
 import Sidebar from "../components/Sidebar/Sidebar"
 import { useLocation } from "react-router-dom"
 import { Container, Box, Button, Grid, Stack } from "@mui/material"
@@ -12,7 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 const ICACsv = () => {
   const { state } = useLocation()
   const [init, setInit] = useState(state.sidebar)
-  const { csv, experiment_id } = state
+  const { csv, experiment } = state
   const navigate = useNavigate()
   const [icaMethod, setIcaMethod] = useState('')
   const [loading, setLoading] = useState(false)
@@ -22,7 +22,7 @@ const ICACsv = () => {
   const [error, setError] = useState(false)
   const [numComponents, setNumComponents] = useState([])
   const [checked, setChecked] = useState([])
-  const handleClickBack = () =>   navigate('/csv/data', { state: {csv: csv , sidebar:state.sidebar, experiment_id: experiment_id}})
+  const handleClickBack = () =>   navigate('/csv/data', { state: {csv: csv , sidebar: init, experiment: experiment}})
   const handleReset = () => {
     setPng('')
     setIcaMethod('')

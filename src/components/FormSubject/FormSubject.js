@@ -9,10 +9,7 @@ import { useNavigate } from "react-router-dom";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
-import { SxProps } from '@mui/material/styles';
-
 import Stack from '@mui/material/Stack';
 
 

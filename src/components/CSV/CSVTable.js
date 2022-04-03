@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { OpenInNewSharp } from '@mui/icons-material';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DownloadIcon from '@mui/icons-material/Download';
-import Table from '../Table/Table';
 import TableCsvCustom from '../Table/TableCsvCustom';
 
 
@@ -19,6 +18,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   const [name, setName] = useState('')
   const [openChange, setOpenChange] = useState(false)
   const [idCSV, setIdCSV] = useState('')
+  const [loadingCopy, setLoadingCopy] = useState(false)
   const navigate = useNavigate()
 
   const handleOpen = () => setOpen(true)
@@ -35,6 +35,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
     setIdCSV('')
   }
   const createCopy = () => {
+    setLoadingCopy(true)
     axios.post(`http://localhost:8000/csv/${idCSV}`, {name: name})
     .then(response => {
       let a = [...data.csvs]
@@ -43,6 +44,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
         ...data,
         csvs: a
       })
+      setLoadingCopy(false)
       setOpen(false)
       setName('')
       setIdCSV('')
@@ -68,10 +70,10 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
     .then(response => {
       let a = [...data.csvs]
 
-      
+
       handleData({
         ...data,
-        csvs: a.map(el => el.id === idCSV ? {...el, name:name} : el)
+        csvs: a.map(el => el.id === idCSV ? {...el, name: response.data.name} : el)
       })
       setOpenChange(false)
       setName('')
@@ -86,7 +88,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
         onClick={e => {
           e.stopPropagation()
           let csv = data.csvs.find(e => e.id === params.id)
-          navigate('/csv/data', { state: {csv: csv , sidebar:sidebar, experiment_id: data.id}})
+          navigate('/csv/data', { state: {csv: csv , sidebar:sidebar, experiment: data}})
         }}
       >
         <OpenInNewSharp sx={{color:'white', fontSize:'2.5rem'}}/>
@@ -94,7 +96,8 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
     )
   }
  
-  const handleName = (e) => setName(e.target.value)
+  const handleName = (e) => 
+    setName(e.target.value)
 
 
   const DeleteBtn = (params) => {
@@ -161,28 +164,17 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   
     )
   }
-/*
-  const ICABtn = (params) => {
-    return (
-      <IconButton 
-        onClick={e => {
-          e.stopPropagation()
-          let csv = data.csvs.find(e => e.id === params.id)
-          navigate('/csv/ica', { state: {csv: csv , sidebar:sidebar, experiment_id: data.id}})
 
-        }}
-      >
-        <RemoveCircleOutlineSharpIcon sx={{color:'white', fontSize:'2.5rem'}}/>
-      </IconButton>
-  
-    )
-  }
-  */
 
   const columns = [
   
-    { field: 'name', headerName: 'Name', width: 400, headerAlign: 'center', sortable: false},
-    { field: 'type', headerName: 'Type', width: 300, headerAlign: 'center', sortable: false},
+    { field: 'name', headerName: 'Name', width: 200, headerAlign: 'center', sortable: false},
+    { field: 'date', headerName: 'Date', width: 200, headerAlign: 'center', sortable: true},
+    
+    { field: 'subject_name', headerName: 'Subject', width: 250, headerAlign: 'center', sortable: true},
+    { field: 'type', headerName: 'Type', width: 150, headerAlign: 'center', sortable: false},     
+
+
     {
       width: 125,
       headerName: 'Open',
@@ -194,8 +186,8 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
     },
     {
       width: 125,
-      headerName: 'Modify',
-      field: 'modify',
+      headerName: 'Rename',
+      field: 'rename',
       renderCell: ModifyBtn,
       disableClickEventBubbling: true,
       headerAlign: 'center',
@@ -251,6 +243,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
           handleText={handleName}
           handleClick={createCopy}
           title="Copy CSV"
+          loading={loadingCopy}
           description="Type in a name for the new CSV"
         />
       </Grid>

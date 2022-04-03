@@ -56,7 +56,9 @@ const TableOwnTraining = memo(({csv}) => {
   
 
     { field: 'name', headerName: 'Name', width: 250, headerAlign: 'center', sortable: false},
-    { field: 'description', headerName: 'Description', width: 1200, headerAlign: 'center', sortable: false},
+    { field: 'description', headerName: 'Description', width: 600, headerAlign: 'center', sortable: false},
+    { field: 'training_data', headerName: 'Training Data', width: 150, headerAlign: 'center', sortable: false},
+
     {
       width: 125,
       headerName: 'Delete',
@@ -74,7 +76,7 @@ const TableOwnTraining = memo(({csv}) => {
       <Grid item xs={12}>
         <Table columns={columns} rows={data !== undefined ? data : []} loading={loading} height='29vh' rowPerPage={3}/>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} sx={{mt:'2vh'}}>
        <ReloadButton
           handleReloadClick={handleReload}
         />

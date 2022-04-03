@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material"
+import { Grid, Stack } from "@mui/material"
 import Chip from '@mui/material/Chip';
 import TextFieldStyled from '../TextFieldStyled/TextFieldStyled'
 import Table from "../Table/Table";
@@ -13,6 +13,8 @@ import ChannelsEnum from "../ChannelsEnum";
 
 
 const Labels = ({ data }) => {
+
+
   return (
     data.labels.map((e, index) => (
       <Grid container spacing={2} key={index}>
@@ -44,6 +46,8 @@ const Labels = ({ data }) => {
 const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperiments, subjects, handleSubjects, init }) => {
 
   const navigate = useNavigate()
+
+
   const ShareBtn = (params) => {
     return (
       <IconButton 
@@ -252,12 +256,30 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
   return (
     <Grid container spacing={2}>
 
-      <Grid item xs={12}  sx={{mt:6}}>
+      <Grid item xs={12}  sx={{mt:6,}}>
         <h2 style={{color: 'white'}}>Labels</h2>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} sx={{mb:'10vh'}}>
         <Labels data={data}/>
       </Grid>
+      <Grid item xs={12}>
+        <Stack direction="row" spacing={2}>
+        <TextFieldStyled 
+          
+          value={data.epoch_start}
+          name="epoch_start"
+          label="Epoch Start"
+        />
+                <TextFieldStyled 
+          
+          value={data.epoch_end}
+          name="epoch_end"
+          label="Epoch End"
+        />
+        </Stack>
+
+      </Grid>
+ 
       <Grid item xs={12} sx={{mt:3}}>
         <h2 style={{color: 'white'}}>Device</h2>
       </Grid>
@@ -316,6 +338,10 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
       </>
 
       }
+ 
+
+
+
       <Grid item xs={12} sx={{mt:3}}>
         <h2 style={{color: 'white'}}>Researchers</h2>
       </Grid>

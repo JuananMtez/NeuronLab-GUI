@@ -2,6 +2,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import  Box from '@mui/material/Box';
 
 
+
 const TableCsvCustom = ({ columns, rows, loading, rowsSelected, showPreproccessing, showFeature, height, rowPerPage,  }) => {
 
   return (
@@ -14,8 +15,9 @@ const TableCsvCustom = ({ columns, rows, loading, rowsSelected, showPreproccessi
         checkboxSelection={showPreproccessing || showFeature}
         loading={loading}
         disableColumnMenu
+        
         disableSelectionOnClick
-        isRowSelectable={(params) => params.row.type.includes('feature') === false }
+        isRowSelectable={(params) => (params.row.type.includes('feature') === false) && (params.row.type !== 'original') }
 
         
         onSelectionModelChange={(newSelectionModel) => {
