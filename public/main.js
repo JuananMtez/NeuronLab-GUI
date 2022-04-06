@@ -5,7 +5,6 @@ const { download } = require('electron-dl');
 
 let win;
 function createWindow() {
-  console.log(path.join(__dirname, 'icon.icns'))
 
     win = new BrowserWindow(
       {

@@ -28,14 +28,14 @@ const TableOwnFeatureExtraction = memo(({csv}) => {
   const columns = [
   
 
-    { field: 'feature_extraction', headerName: 'Feature', width: 200, headerAlign: 'center', sortable: false},
+    { field: 'feature_extraction', headerName: 'Feature', width: 550, headerAlign: 'center', sortable: false},
 
   ]
 
 
   return (
     <Grid container>
-      <Grid item xs={2.5}>
+      <Grid item xs={6}>
         <Table columns={columns} rows={data !== undefined ? data : []} loading={loading} height='18vh' rowPerPage={1}/>
       </Grid>
 

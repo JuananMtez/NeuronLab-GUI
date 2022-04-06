@@ -193,24 +193,6 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
       headerAlign: 'center',
       sortable: false
     },
- /*   {
-      width: 125,
-      headerName: 'ICA',
-      field: 'ica',
-      renderCell: ICABtn,
-      disableClickEventBubbling: true,
-      headerAlign: 'center',
-      sortable: false
-    },
-  */{
-      width: 125,
-      headerName: 'Download',
-      field: 'download',
-      renderCell: DownloadBtn,
-      disableClickEventBubbling: true,
-      headerAlign: 'center',
-      sortable: false
-    },
     {
       width: 125,
       headerName: 'Copy',
@@ -220,6 +202,17 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
       headerAlign: 'center',
       sortable: false
     },
+
+    {
+      width: 125,
+      headerName: 'Download',
+      field: 'download',
+      renderCell: DownloadBtn,
+      disableClickEventBubbling: true,
+      headerAlign: 'center',
+      sortable: false
+    },
+
     {
       width: 125,
       headerName: 'Delete',
@@ -259,7 +252,15 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
         />
       </Grid>
     <Grid item xs={12}>
-      <TableCsvCustom columns={columns} rowsSelected={rowsSelected} rows={data.csvs !== undefined ? data.csvs : []} loading={false} showPreproccessing={showPreproccessing} showFeature={showFeature} height='41vh' rowPerPage={5}/>
+      <TableCsvCustom 
+        columns={columns} 
+        rowsSelected={rowsSelected} 
+        rows={data.csvs !== undefined ? data.csvs : []} 
+        loading={false} showPreproccessing={showPreproccessing} 
+        showFeature={showFeature} 
+        height='70.5vh' 
+        rowPerPage={10}
+      />
     </Grid>
   </Grid>
 

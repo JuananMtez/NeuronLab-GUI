@@ -1,6 +1,6 @@
 import { Grid, Stack } from "@mui/material"
 import Slider from '@mui/material/Slider';
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 import TextFieldStyled from "../TextFieldStyled/TextFieldStyled";
 import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
@@ -37,7 +37,7 @@ const getColor = (i) => {
   }
 }
 
-const StaticChart = ({ csv, experiment }) => {
+const StaticChart = memo(({ csv, experiment }) => {
   const [slide, setSlide] = useState([0, csv.duraction]);
   const [status, setStatus] = useState({ data: {}, loading: false})
   const [width, setWidth] = useState(1130)
@@ -255,6 +255,6 @@ const StaticChart = ({ csv, experiment }) => {
       }
     </>
   )
-}
+})
 
 export default StaticChart

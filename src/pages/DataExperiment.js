@@ -14,6 +14,7 @@ const DataExperiment = () => {
   const [researchersNot, setResearchersNot] = useState([])
   const [subjectsNot, setSubjectsNot] = useState([])
 
+
   const id = state.id
 
   useEffect(() => {
@@ -27,6 +28,8 @@ const DataExperiment = () => {
     .then(response => setSubjectsNot(response.data))
   }, [id])
 
+
+  
   return (
     <Sidebar init={init} pos='2' tab={'Experiment'} handleSidebar={setInit}>
       <FormExperimentDisabled 

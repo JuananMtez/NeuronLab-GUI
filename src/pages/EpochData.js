@@ -20,6 +20,8 @@ const EpochData = () => {
   const [loadingPlotAverage, setLoadingPlotAverage] = useState(false)
   const [loadingCompare, setLoadingCompare] = useState(false)
   const [loadingActivity, setLoadingActivity] = useState(false)
+  const [loadingPlotPsd, setLoadingPlotPsd] = useState(false)
+  const [loadingPlotPsdChart, setLoadingPlotPsdChart] = useState(false)
 
 
 
@@ -32,7 +34,7 @@ const EpochData = () => {
   const [labelCompare, setLabelCompare] = useState('')
   const [labelBrain, setLabelBrain] = useState('')
   const [extrapolate, setExtrapolate] = useState('')
-
+  const [plotChart, setPlotChart] = useState({f_min: 0, f_max: 0, average: ''})
   const [time, setTime] = useState('')
   const [times, setTimes]  = useState([])
 
@@ -40,6 +42,11 @@ const EpochData = () => {
   const [imgsAverage, setImgsAverage] = useState([])
   const [imgsCompare, setImgsCompare] = useState([])
   const [imgsActivity, setImgsActivity] = useState([])
+  const [imgPsdTop, setImgPsdTop] = useState('')
+  const [imgsPsdChart, setImgsPsdChart] = useState([])
+
+
+
   const handleClickBack = () =>   navigate('/csv/data', { state: {csv: csv , sidebar:state.sidebar, experiment: experiment}})
   
   function renderValue(option, text) {
@@ -69,6 +76,35 @@ const EpochData = () => {
       setValueEpoch('')
     })
   }
+
+
+  const handleClickPlotPsdTop = () => {
+    setLoadingPlotPsd(true)
+    axios.get(`http://localhost:8000/csv/${csv.id}/psd/topomap/plot`)
+    .then(response => {
+      setImgPsdTop(response.data)
+
+    }).finally(()=> {
+      setLoadingPlotPsd(false)
+    })
+  }
+
+  const handleClickPlotPsdChart = () => {
+    setLoadingPlotPsdChart(true)
+    axios.post(`http://localhost:8000/csv/${csv.id}/psd/plot`, {f_min: plotChart.f_min, f_max: plotChart.f_max, average: plotChart.average})
+    .then(response => {
+      let a = [...imgsPsdChart]
+      a.push(response.data)
+
+      setImgsPsdChart(a)
+
+    }).finally(()=> {
+      setPlotChart({f_min: 0, f_max: 0, average: ''})
+      setLoadingPlotPsdChart(false)
+    })
+  }
+
+
 
   const handleClickAveragePlot = () => {
     setLoadingPlotAverage(true)
@@ -423,6 +459,106 @@ const EpochData = () => {
                 <img src={`data:image/jpeg;base64,${img}`} alt={'plot_activity'}/>
               </Grid>
             ))
+          }
+
+          <Grid item xs={12} sx={{mt:'3vh'}}>
+            <h2 style={{color:'white'}}>PSD Topomap</h2>
+          </Grid>
+          <Grid item xs={12}>
+            <Stack direction="row">
+            <LoadingButton 
+              color="error"
+              variant="contained"
+              disabled={imgPsdTop !== ''}
+              loading={loadingPlotPsd}
+              onClick={handleClickPlotPsdTop}
+              >
+                Plot
+              </LoadingButton>
+              <Box sx={{ml:'2vh'}}></Box>
+
+              <Button 
+              color="secondary"
+              variant="contained"
+              disabled={imgPsdTop === ''}
+              onClick={() => setImgPsdTop('')}
+              >
+                Clean
+              </Button>
+            </Stack>
+          </Grid>
+          {
+            imgPsdTop !== '' &&
+            <Grid item xs={12} sx={{mt:'2vh'}}>
+              <img src={`data:image/jpeg;base64,${imgPsdTop}`} alt={'plot_psd'}/>
+            </Grid>
+          }
+
+          <Grid item xs={12} sx={{mt:'3vh'}}>
+            <h2 style={{color:'white'}}>PSD Topomap</h2>
+          </Grid>
+          <Grid item xs={12}>
+            <Stack direction="row">
+            <TextFieldStyled
+              
+              value={plotChart.f_min}
+              name="f_min"
+              label="Minimum frequency"
+              type="number"
+              onChange={(e) => setPlotChart({...plotChart, f_min: e.target.value})}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}}
+
+            />
+                          <Box sx={{ml:'2vh'}}></Box>
+
+            <TextFieldStyled
+              
+              value={plotChart.f_max}
+              name="f_max"
+              label="Maximum frequency"
+              type="number"
+              onChange={(e) => setPlotChart({...plotChart, f_max: e.target.value})}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*'}}
+
+            />
+                          <Box sx={{ml:'2vh'}}></Box>
+
+              <CustomSelect renderValue={o => renderValue(o, 'Average')} value={plotChart.average} onChange={(e) => setPlotChart({...plotChart, average: e})}>
+              
+                <StyledOption value={true}>True</StyledOption>
+                <StyledOption value={false}>False</StyledOption>                
+             
+            </CustomSelect> 
+            <Box sx={{ml:'2vh'}}></Box>
+
+            <LoadingButton 
+              color="error"
+              variant="contained"
+              disabled={plotChart.f_max === '' || plotChart.f_min ===  '' || plotChart.average === ''}
+              loading={loadingPlotPsdChart}
+              onClick={handleClickPlotPsdChart}
+              >
+                Plot
+              </LoadingButton>
+              <Box sx={{ml:'2vh'}}></Box>
+
+              <Button 
+              color="secondary"
+              variant="contained"
+              disabled={imgsPsdChart.length === 0}
+              onClick={() => setImgsPsdChart([])}
+              >
+                Clean
+              </Button>
+            </Stack>
+          </Grid>
+          {
+            imgsPsdChart.map((img, index) => (
+              <Grid key={index} item xs={12} sx={{mt:'2vh'}}>
+              <img src={`data:image/jpeg;base64,${img}`} alt={'psd_chart'}/>
+              </Grid>
+            ))
+
           }
         </Grid>
 

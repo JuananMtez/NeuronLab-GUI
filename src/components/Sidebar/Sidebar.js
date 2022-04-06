@@ -75,7 +75,7 @@ const getIcon = (index, style) => {
 };
 
 
-const Sidebar = ({ children, init, pos, tab, handleSidebar}) => {
+const Sidebar = ({ children, init, pos, tab, handleSidebar }) => {
   const theme = useTheme();
 
   const handleDrawerOpen = () => {
@@ -104,6 +104,10 @@ const Sidebar = ({ children, init, pos, tab, handleSidebar}) => {
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
             {tab}
           </Typography>  
+
+
+
+
 
         </Toolbar>
       </AppBar>

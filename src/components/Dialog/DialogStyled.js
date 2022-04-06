@@ -43,7 +43,7 @@ const DialogStyled = ({ title, description, open, handleClose, text, handleText,
           />
       </DialogContent>
       <DialogActions>
-        <Button size="small" disbled={loading} variant="contained" onClick={handleClose}color="error">Cancel</Button>
+        <Button size="small" disabled={loading} variant="contained" onClick={handleClose}color="error">Cancel</Button>
         <LoadingButton disabled={text.length === 0 || text.length > 9 ? true : false} loading={loading} size="small" variant="contained" onClick={handleClick}>Accept</LoadingButton>
       </DialogActions>
     </Dialog>

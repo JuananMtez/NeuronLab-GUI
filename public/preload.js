@@ -262,6 +262,7 @@ contextBridge.exposeInMainWorld('api', {
             form.append('files', fs.createReadStream(path.join('tmp', names[i])))
 
         timeCorrection = streamInletEEG.timeCorrection()
+        ipcRenderer.send('open_dialog', 'Loading...')
 
         axios({
             method: 'post',
@@ -282,13 +283,16 @@ contextBridge.exposeInMainWorld('api', {
     },
 
     applyFilter: (msg) => {
+        ipcRenderer.send('open_dialog', 'Loading...')
         axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
-        .then(response => ipcRenderer.send('open_dialog', 'Preproccessing applied correctly'))
+        .then(response => ipcRenderer.send('open_dialog', response.data))
 
-        .catch(error => ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred'))
+        .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
     },
 
     applyIca: (id_csv, msg) => {
+        ipcRenderer.send('open_dialog', 'Loading...')
+
         axios.post(`http://127.0.0.1:8000/csv/${id_csv}/ica/apply`, msg, { adapter: require('axios/lib/adapters/http')}) 
         .then(response => ipcRenderer.send('open_dialog', 'Components excluded correctly'))
 
@@ -301,21 +305,30 @@ contextBridge.exposeInMainWorld('api', {
     },
 
     applyTrainingMachine: (msg) => {
+        ipcRenderer.send('open_dialog', 'Loading...')
+
         axios.post(`http://localhost:8000/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
         .then(response => ipcRenderer.send('open_dialog', 'Training model created'))
-        .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
-    },
+        .catch(error => {
+            ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
+        } )    },
 
     applyTrainingDeep: (msg) => {
+        ipcRenderer.send('open_dialog', 'Loading...')
+
         axios.post(`http://localhost:8000/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
         .then(response => ipcRenderer.send('open_dialog', 'Training model created'))
-        .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
+        .catch(error => {
+            ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
+        } )    
     },
 
 
     applyFeature: (msg) => {
+        ipcRenderer.send('open_dialog', 'Loading...')
+
         axios.post('http://127.0.0.1:8000/csv/feature/list', msg, { adapter: require('axios/lib/adapters/http')}) 
-        .then(response => ipcRenderer.send('open_dialog', 'Feature extraction applied correctly'))
+        .then(response => ipcRenderer.send('open_dialog', response.data))
 
         .catch(error => {
             ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
