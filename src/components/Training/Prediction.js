@@ -188,7 +188,7 @@ const SummaryBtn = (params) => {
       </Grid>
     
       <Grid item xs={12} sx={{mt:'3vh'}}>
-        <textarea value={text.text} name="Text1" style={{width:'100%', fontSize: '17px', fontWeight:'bold', color:'white', outline:'none', resize:'none', backgroundColor: 'transparent', border:'none'}} rows={text.n_jumps}></textarea>
+        <textarea defaultValue={text.text} name="Text1" style={{width:'100%', fontSize: '17px', fontWeight:'bold', color:'white', outline:'none', resize:'none', backgroundColor: 'transparent', border:'none'}} rows={text.n_jumps}></textarea>
 
       </Grid>
         

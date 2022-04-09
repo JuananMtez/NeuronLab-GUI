@@ -27,6 +27,10 @@ const TrainingForm = ({ csv, experiment }) => {
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const handleName = (e) => setName(e.target.value)
+
+  console.log(layer)
+
+
   const handleTrainingBtn = () => {
 
     let list = [...csvsSelected, csv.id]
@@ -98,11 +102,12 @@ const TrainingForm = ({ csv, experiment }) => {
         setLayer({...layer, kernel_initializer: '', batch_size:'', input_size: ''})
 
       
-    } else 
+    } else  {
       setLayers([])
-
-
+      setLayer({...layer, kernel_initializer: '', batch_size:'', input_size: ''})
     }
+
+  }
   
 
   function renderValue(option, text) {
@@ -381,7 +386,7 @@ const TrainingForm = ({ csv, experiment }) => {
           />
           {
           
-                        <TextFieldStyled
+          <TextFieldStyled
             value={percent.testing_data}
             name="testing_data"
             label="Testing data"      

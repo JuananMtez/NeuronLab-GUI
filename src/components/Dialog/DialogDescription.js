@@ -50,7 +50,7 @@ export default function DialogDescription({open, handleClose}) {
           {
             <Grid container>
               <Grid item xs={12}>
-                <textarea value={open.description} name="Text1" style={{width:'100%', fontSize: '18px', fontWeight:'bold', color:'white', outline:'none', resize:'none', backgroundColor: 'transparent', border:'none'}} rows={50}></textarea>
+                <textarea defaultValue={open.description} name="Text1" style={{width:'100%', fontSize: '18px', fontWeight:'bold', color:'white', outline:'none', resize:'none', backgroundColor: 'transparent', border:'none'}} rows={50}/>
 
               </Grid>
             </Grid>
