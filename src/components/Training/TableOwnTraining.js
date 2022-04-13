@@ -113,7 +113,7 @@ const TableOwnTraining = memo(({csv}) => {
     let training = data.find(d => d.id === params.id)
     return (
       <IconButton 
-        //sx={training !== undefined && training.type !== 'Deep Learning' ? {visibility: 'hidden'}: {}}
+        sx={training !== undefined && training.type !== 'Deep Learning' ? {visibility: 'hidden'}: {}}
         onClick={e => {
           e.stopPropagation()
           handleClickOpenChart(e, params.id)
