@@ -6,7 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 const FormFeatureExtraction = ({csvs}) => {
   const [feature, setFeature] = useState('')
-  const [checked, setChecked] = useState({beta: false, alpha: false, theta: false, delta: false});
+  const [checked, setChecked] = useState({beta: false, alpha: false, theta: false, delta: false, gamma: false});
 
 
   const handleChange = (event) => {
@@ -37,11 +37,13 @@ const FormFeatureExtraction = ({csvs}) => {
         text += 'theta,'
       if (checked.beta === true)
         text += 'beta,'
+      if (checked.gamma === true)
+      text += 'gamma,'
       
       text = text.slice(0, -1)
     
       msg = {csvs: csvs, feature: text}
-      setChecked({beta: false, alpha: false, theta: false, delta: false})
+      setChecked({beta: false, alpha: false, theta: false, delta: false, gamma: false})
 
     } else 
       msg = {csvs: csvs, feature: feature}
@@ -56,6 +58,7 @@ const FormFeatureExtraction = ({csvs}) => {
     <Grid container>
       <Grid item xs={12}>
       <CustomSelect renderValue={o => renderValue(o, 'Feature')} value={feature} onChange={setFeature}>
+        <StyledOption value={'nothing'}>Nothing</StyledOption>
         <StyledOption value={'mean'}>Mean</StyledOption>
         <StyledOption value={'variance'}>Variance</StyledOption>
         <StyledOption value={'deviation'}>Standard Deviation</StyledOption>
@@ -66,6 +69,19 @@ const FormFeatureExtraction = ({csvs}) => {
         feature === 'psd' && 
         <>
         <Grid item xs={12} sx={{mt:'2vh'}}>
+        <Stack direction="row">
+
+          <Checkbox
+            name="gamma"
+            checked={checked.gamma}
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+          <p style={{fontSize:'1.3rem', color: 'white', letterSpacing: '0.00398em', fontFamily: 'Roboto'}}>Gamma (30-100 Hz)</p>
+          </Stack>
+
+          </Grid>
+        <Grid item xs={12}>
         <Stack direction="row">
 
           <Checkbox
@@ -124,7 +140,7 @@ const FormFeatureExtraction = ({csvs}) => {
           variant="contained"
           fullWidth
           disabled={csvs.length === 0 || feature === '' ||
-                    (feature === 'psd' && checked.alpha === false && checked.beta === false && checked.delta === false && checked.theta === false)
+                    (feature === 'psd' && checked.alpha === false && checked.beta === false && checked.delta === false && checked.theta === false && checked.gamma === false)
                   
         }
           onClick={handleClick}

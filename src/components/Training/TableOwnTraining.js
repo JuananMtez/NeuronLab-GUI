@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import ReloadButton from "../ReloadButton/ReloadButton";
 import DialogDescription from "../Dialog/DialogDescription";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import DialogChart from '../Dialog/DialogChart'
 
 
 const TableOwnTraining = memo(({csv}) => {
@@ -14,7 +15,8 @@ const TableOwnTraining = memo(({csv}) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [openDes, setOpenDes] = useState({open: false, description: ''})
-
+  const [openChart, setOpenChart] = useState({open: false, accuracy: '', loss: ''})
+  
   
   const handleClickOpenDes = (e, id) => {
     let c = data.find(d => d.id === id)
@@ -27,6 +29,14 @@ const TableOwnTraining = memo(({csv}) => {
   const handleClickOpenVal = (e, id) => {
     let c = data.find(d => d.id === id)
     setOpenDes({open: true, description: c.validation})
+  }
+
+  const handleClickOpenChart = (e, id) => {
+    let c = data.find(d => d.id === id)
+    setOpenChart({open: true, accuracy: c.accuracy, loss: c.loss})
+  }
+  const handleClickCloseChart = () => {
+    setOpenChart({open: false, accuracy: '', loss: ''})
   }
 
 
@@ -99,6 +109,22 @@ const TableOwnTraining = memo(({csv}) => {
     )
   }
 
+  const CurveBtn = (params) => {
+    let training = data.find(d => d.id === params.id)
+    return (
+      <IconButton 
+        //sx={training !== undefined && training.type !== 'Deep Learning' ? {visibility: 'hidden'}: {}}
+        onClick={e => {
+          e.stopPropagation()
+          handleClickOpenChart(e, params.id)
+
+        }}
+      >
+        <ExpandLessIcon sx={{color:'white', fontSize:'2.5rem'}}/>
+      </IconButton>
+    )
+  }
+
   const columns = [
   
 
@@ -124,6 +150,15 @@ const TableOwnTraining = memo(({csv}) => {
       headerAlign: 'center',
       sortable: false
     },
+    {
+      width: 125,
+      headerName: 'History',
+      field: 'history',
+      renderCell: CurveBtn,
+      disableClickEventBubbling: true,
+      headerAlign: 'center',
+      sortable: false
+    },
 
     {
       width: 125,
@@ -134,6 +169,7 @@ const TableOwnTraining = memo(({csv}) => {
       headerAlign: 'center',
       sortable: false
     },
+
   ]
 
 
@@ -148,6 +184,7 @@ const TableOwnTraining = memo(({csv}) => {
         />
       </Grid>
       <DialogDescription open={openDes} handleClose={handleClickCloseDes} />
+      <DialogChart open={openChart} handleClose={handleClickCloseChart} accuracy={openChart.accuracy} loss={openChart.loss}/>
 
     </Grid>
 

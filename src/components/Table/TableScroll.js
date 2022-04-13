@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useTable } from 'react-table'
-
+import { memo } from 'react'
 const Styles = styled.div`
 padding: 1rem;
 
@@ -30,7 +30,7 @@ table {
   }
 }
 `
-const TableScroll = ({ columns, data }) => {
+const TableScroll = memo(({ columns, data }) => {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -84,6 +84,6 @@ const TableScroll = ({ columns, data }) => {
       </table>
     </Styles>
   )
-}
+})
 
 export default TableScroll

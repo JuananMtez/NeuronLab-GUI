@@ -28,7 +28,6 @@ const TrainingForm = ({ csv, experiment }) => {
   const handleClose = () => setOpen(false)
   const handleName = (e) => setName(e.target.value)
 
-  console.log(layer)
 
 
   const handleTrainingBtn = () => {
