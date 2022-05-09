@@ -169,7 +169,7 @@ const DataCsv = () => {
               <Grid item xs={6}>
                 <Button
                   variant="contained"
-                  disabled={csv.type !== 'feature' && csv.type !== 'prep | feaure'}
+                  disabled={csv.type !== 'feature' && csv.type !== 'prep | feature'}
                   fullWidth
                   onClick={handleClickTraining}
                   color={show.showTraining === true ? "error" : "primary"}
@@ -181,7 +181,7 @@ const DataCsv = () => {
                 <Button
                   variant="contained"
                   fullWidth
-                  disabled={csv.type !== 'feature' && csv.type !== 'prep | feaure'}
+                  disabled={csv.type !== 'feature' && csv.type !== 'prep | feature'}
                   onClick={handleClickPrediction}
                   color={show.showPrediction === true ? "error" : "primary"}
 

@@ -21,8 +21,8 @@ import ChannelsEnum from "../ChannelsEnum";
 const FormExperiment = ({ init }) => {
 
   const user = JSON.parse(localStorage.getItem('user'))
-  const [value, setValue] = useState({name: '', description: '', labels: []})
-  const [label, setLabel] = useState('')
+  const [value, setValue] = useState({name: '', description: '', stimuli: []})
+  const [stimulus, setStimulus] = useState('')
   const [subjects, setSubjects] = useState([])
   const [subjectsSelected, setSubjectsSelected] = useState([])
   const [device, setDevice] = useState('')
@@ -32,7 +32,7 @@ const FormExperiment = ({ init }) => {
   const navigate = useNavigate()
 
   let disabled = value.name === '' || value.description === ''  || epoch.start_epoch === '' || epoch.end_epoch === ''
-              || channels.length !== valueDevice.channels_count  || valueDevice.name === '' || (value.labels.filter(e => e.description === '' ).length > 0)
+              || channels.length !== valueDevice.channels_count  || valueDevice.name === '' || (value.stimuli.filter(e => e.description === '' ).length > 0)
 
   useEffect(() => {
     let isMounted = true;  
@@ -63,15 +63,15 @@ const FormExperiment = ({ init }) => {
 
   
 
-  const handleChangeLabel = (ev, index) => {
+  const handleChangeStimulus = (ev, index) => {
     ev.preventDefault()
 
     if (!ev.target.value.includes(' ')) {
-      let list = value.labels
+      let list = value.stimuli
       list[index]={...list[index], description: ev.target.value}
       setValue({
         ...value,
-        labels: list
+        stimulis: list
       })
     }
 
@@ -118,27 +118,27 @@ const FormExperiment = ({ init }) => {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      if (label === '') 
+      if (stimulus === '') 
         return
-      const l = {label: label, description: ''}
-      let list = [...value.labels]
+      const l = {name: stimulus, description: ''}
+      let list = [...value.stimuli]
       list.push(l)
       setValue({
         ...value,
-        labels: list
+        stimuli: list
       })
-      setLabel('')
+      setStimulus('')
       
     }
   }
 
   const handleDelete = (e, v) => {
     e.preventDefault()
-    let list = [...value.labels]    
+    let list = [...value.stimuli]    
     
     setValue({
       ...value,
-      labels: list.filter(l => l.label !== v)
+      stimuli: list.filter(l => l.name !== v)
     })       
   }
 
@@ -157,7 +157,7 @@ const FormExperiment = ({ init }) => {
       researcher_creator_id: user.id, 
       epoch_start: epoch.start_epoch,
       epoch_end: epoch.end_epoch,
-      labels: value.labels, 
+      stimuli: value.stimuli, 
       device: {
         name: valueDevice.name, 
         sample_rate: valueDevice.sample_rate, 
@@ -189,7 +189,6 @@ const FormExperiment = ({ init }) => {
         <Grid item xs={12}>
           <TextFieldStyled 
           fullWidth
-          required
           value={value.name}
           onChange={handleChange}
           name="name"
@@ -198,7 +197,7 @@ const FormExperiment = ({ init }) => {
         <Grid item xs={12}>
           <TextFieldStyled 
             fullWidth
-            required
+            
             name="description"
             label="Description"
             maxRows={4}
@@ -211,12 +210,12 @@ const FormExperiment = ({ init }) => {
         </Grid>
         <Grid item xs={12}>
           <TextFieldStyled
-            required
+            
             onKeyDown={handleKeyDown}
-            onChange={(e) => setLabel(e.target.value)}
-            value={label}
-            name="label"
-            label="Label"
+            onChange={(e) => setStimulus(e.target.value)}
+            value={stimulus}
+            name="stimulus"
+            label="Stimulus"
             type="number"
             InputLabelProps={{
               shrink: true,
@@ -227,27 +226,27 @@ const FormExperiment = ({ init }) => {
         </Grid>
        
       </Grid>
-      {value.labels.length === 0 &&
-        <p style={{color: "#c9382b", fontSize:'20px'}}>* Press enter to add a label</p>
+      {value.stimuli.length === 0 &&
+        <p style={{color: "#c9382b", fontSize:'20px'}}>* Press enter to add a stimulus</p>
       }
       
-      {value.labels.map((e, index) => (
+      {value.stimuli.map((e, index) => (
       <Grid container spacing={1} sx={{mt:3}} key={index}>
         <Grid item xs={2} sx={{mt:2}} >
           
               <Chip
-                label={e.label}
-                onDelete={ev => handleDelete(ev, e.label)}
+                label={e.name}
+                onDelete={ev => handleDelete(ev, e.name)}
                 key={index}
                 sx={{color:'white', mt:1.5}}
               />
             </Grid>
             <Grid item xs={10} sx={{mt:2}}>
               <TextFieldStyled 
-                required
-                onChange={ev => handleChangeLabel(ev, index)}
+                
+                onChange={ev => handleChangeStimulus(ev, index)}
                 value={e.description}
-                name="label"
+                name="description"
                 label="Description"
                 fullWidth 
               />
@@ -263,7 +262,7 @@ const FormExperiment = ({ init }) => {
           <Stack direction="row" spacing={2}>
           <TextFieldStyled 
           
-          required
+          
           value={epoch.start_epoch}
           onChange={(e) => setEpoch({...epoch, [e.target.name]: e.target.value})}
           name="start_epoch"
@@ -274,7 +273,7 @@ const FormExperiment = ({ init }) => {
            />
                    <TextFieldStyled 
           
-          required
+          
           value={epoch.end_epoch}
           type="number"
           onChange={(e) => setEpoch({...epoch, [e.target.name]: e.target.value})}          

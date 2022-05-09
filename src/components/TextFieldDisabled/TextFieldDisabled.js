@@ -10,23 +10,23 @@ const TextFieldDisabled = styled(TextField)({
 
     },
     label: {
-        color:'#a6a6a6',
+        color:'#d9d9d9',
     },
     '& label.Mui-focused': {
-      color: '#7ed957',
+      color: '#26ace2',
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: '#7ed957',
+      borderBottomColor: '#26ace2',
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        borderColor: '#7ed957',
+        borderColor: '#26ace2',
       },
       '&:hover fieldset': {
-        borderColor: '#7ed957',
+        borderColor: '#26ace2',
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#7ed957',
+        borderColor: '#26ace2',
       },
   
     },

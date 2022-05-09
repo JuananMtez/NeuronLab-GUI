@@ -28,11 +28,10 @@ const EpochData = () => {
   const [valueEpoch, setValueEpoch] = useState('')
   const [nEpochs, setNEpochs] = useState([...Array(csv.events).keys()])
 
-  const [chart, setChart] = useState({channel: '', label: ''})
+  const [chart, setChart] = useState({channel: '', stimulus: ''})
 
-
-  const [labelCompare, setLabelCompare] = useState('')
-  const [labelBrain, setLabelBrain] = useState('')
+  const [stimulusCompare, setStimulusCompare] = useState('')
+  const [stimulusBrain, setStimulusBrain] = useState('')
   const [extrapolate, setExtrapolate] = useState('')
   const [plotChart, setPlotChart] = useState({f_min: 0, f_max: 0, average: ''})
   const [time, setTime] = useState('')
@@ -44,7 +43,6 @@ const EpochData = () => {
   const [imgsActivity, setImgsActivity] = useState([])
   const [imgPsdTop, setImgPsdTop] = useState('')
   const [imgsPsdChart, setImgsPsdChart] = useState([])
-
 
 
   const handleClickBack = () =>   navigate('/csv/data', { state: {csv: csv , sidebar:state.sidebar, experiment: experiment}})
@@ -108,56 +106,56 @@ const EpochData = () => {
 
   const handleClickAveragePlot = () => {
     setLoadingPlotAverage(true)
-    axios.post(`http://localhost:8000/csv/${csv.id}/epoch/average/plot`, { channel: chart.channel, label: chart.label})
+    axios.post(`http://localhost:8000/csv/${csv.id}/epoch/average/plot`, { channel: chart.channel, stimulus: chart.stimulus})
     .then(response => {
       let a = [...imgsAverage]
       a.push(response.data)
 
       setImgsAverage(a)
       setLoadingPlotAverage(false)
-      setChart({channel: '', label: ''})
+      setChart({channel: '', stimulus: ''})
     })
     .catch(error => {
       setLoadingPlotAverage(false)
-      setChart({channel: '', label: ''})
+      setChart({channel: '', stimulus: ''})
     })
   }
 
   const handleClickCompare = () => {
     setLoadingCompare(true)
-    axios.post(`http://localhost:8000/csv/${csv.id}/epoch/compare/plot`, { label: labelCompare})
+    axios.post(`http://localhost:8000/csv/${csv.id}/epoch/compare/plot`, { stimulus: stimulusCompare})
     .then(response => {
       let a = [...imgsCompare]
       a.push(response.data)
 
       setImgsCompare(a)
       setLoadingCompare(false)
-      setLabelCompare('')
+      setStimulusCompare('')
     })
     .catch(error => {
       setLoadingCompare(false)
-      setLabelCompare('')
+      setStimulusCompare('')
     })
   }
 
 
   const handleClickActivity = () => {
     setLoadingActivity(true)
-    axios.post(`http://localhost:8000/csv/${csv.id}/epoch/activity/plot`, { label: labelBrain, times: times, extrapolate: extrapolate})
+    axios.post(`http://localhost:8000/csv/${csv.id}/epoch/activity/plot`, { stimulus: stimulusBrain, times: times, extrapolate: extrapolate})
     .then(response => {
       let a = [...imgsActivity]
       a.push(response.data)
 
       setImgsActivity(a)
       setLoadingActivity(false)
-      setLabelBrain('')
+      setStimulusBrain('')
       setExtrapolate('')
       setTimes([])
       setTime('')
     })
     .catch(error => {
       setLoadingActivity(false)
-      setLabelBrain('')
+      setStimulusBrain('')
       setExtrapolate('')
       setTimes([])
       setTime('')
@@ -277,9 +275,9 @@ const EpochData = () => {
               }
               </CustomSelect>
               <Box sx={{ml:'2vh'}}></Box>
-              <CustomSelect renderValue={o => renderValue(o, 'Label')} value={chart.label} onChange={(e) => setChart({...chart, label: e})}>
+              <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} value={chart.stimulus} onChange={(e) => setChart({...chart, stimulus: e})}>
               {
-                experiment.labels.map((l, index) => (
+                experiment.stimuli.map((l, index) => (
                   <StyledOption key={index} value={l.description}>{l.description}</StyledOption>
 
                 
@@ -291,7 +289,7 @@ const EpochData = () => {
               color="error"
               size="small"
               variant="contained"
-              disabled={chart.channel === '' || chart.label === ''}
+              disabled={chart.channel === '' || chart.stimulus === ''}
               loading={loadingPlotAverage}
               onClick={handleClickAveragePlot}
               >
@@ -328,9 +326,9 @@ const EpochData = () => {
           <Grid item xs={12}>
             <Stack direction="row">
 
-            <CustomSelect renderValue={o => renderValue(o, 'Label')} value={labelCompare} onChange={setLabelCompare}>
+            <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} value={stimulusCompare} onChange={setStimulusCompare}>
               {
-                experiment.labels.map((l, index) => (
+                experiment.stimuli.map((l, index) => (
                   <StyledOption key={index} value={l.description}>{l.description}</StyledOption>
                 ))
               }
@@ -341,7 +339,7 @@ const EpochData = () => {
               color="error"
               size="small"
               variant="contained"
-              disabled={labelCompare === ''}
+              disabled={stimulusCompare === ''}
               loading={loadingCompare}
               onClick={handleClickCompare}
               >
@@ -374,9 +372,9 @@ const EpochData = () => {
           </Grid>
           <Grid item xs={12}>
            <Stack direction="row">
-            <CustomSelect renderValue={o => renderValue(o, 'Label')} value={labelBrain} onChange={setLabelBrain}>
+            <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} value={stimulusBrain} onChange={setStimulusBrain}>
               {
-                experiment.labels.map((l, index) => (
+                experiment.stimuli.map((l, index) => (
                   <StyledOption key={index} value={l.description}>{l.description}</StyledOption>
                 ))
               }
@@ -409,7 +407,7 @@ const EpochData = () => {
               color="error"
               size="small"
               variant="contained"
-              disabled={labelBrain === '' || times.length === 0 || extrapolate === ''}
+              disabled={stimulusBrain === '' || times.length === 0 || extrapolate === ''}
               loading={loadingActivity}
               onClick={handleClickActivity}
               >

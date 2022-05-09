@@ -155,13 +155,13 @@ contextBridge.exposeInMainWorld('api', {
 
     },
 
-    startStimulusUDPRecording: (port, labels) => {
+    startStimulusUDPRecording: (port, stimuliParam) => {
         server = dgram.createSocket('udp4');
         server.on('message', (msg, rinfo) => {
             const {stimulus, timestamp} = JSON.parse(msg)
             if (Array.isArray(stimulus)) {
                 if (typeof stimulus[0] == 'number' && !isNaN(stimulus[0]) && Number.isInteger(stimulus[0])) {
-                    if (labels.filter(l => l.label == stimulus[0]).length === 1) {
+                    if (stimuliParam.filter(l => l.name == stimulus[0]).length === 1) {
                         stimuli.push([stimulus, timestamp])
                         stimuliAlwaysMemory.push({stimulus: stimulus[0], timestamp: timestamp})
                     } else 

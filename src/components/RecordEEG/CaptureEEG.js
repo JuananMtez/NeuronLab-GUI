@@ -130,7 +130,7 @@ const CaptureEEG = ({ state }) => {
     })
   }
 
-  const getLabelProtocol = () => {
+  const getStimulusProtocol = () => {
     switch(protocol) {
       case 'lsl':
         return (      
@@ -161,7 +161,7 @@ const CaptureEEG = ({ state }) => {
     
 
     if (protocol === 'udp')
-      window.api.startStimulusUDPRecording(status.portUdp, state.experiment.labels)
+      window.api.startStimulusUDPRecording(status.portUdp, state.experiment.stimuli)
     else 
       window.api.startStimulusLSLRecording()
 
@@ -351,7 +351,7 @@ const CaptureEEG = ({ state }) => {
       </FormControl>
     </Grid>
     <Grid item xs={9}>
-      {getLabelProtocol()}
+      {getStimulusProtocol()}
     </Grid>
     <Grid item xs={12} sx={{ml:2, mt:4}}>
       {

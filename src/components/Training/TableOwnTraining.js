@@ -33,7 +33,7 @@ const TableOwnTraining = memo(({csv}) => {
 
   const handleClickOpenChart = (e, id) => {
     let c = data.find(d => d.id === id)
-    setOpenChart({open: true, accuracy: c.accuracy, loss: c.loss})
+    setOpenChart({open: true, accuracy: c.path_accuracy, loss: c.path_loss})
   }
   const handleClickCloseChart = () => {
     setOpenChart({open: false, accuracy: '', loss: ''})

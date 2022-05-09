@@ -7,19 +7,19 @@ const SelectStyled = styled(Select)({
    
   color:'white',
   '.MuiOutlinedInput-notchedOutline': {
-    borderColor: '#7ed957',
+    borderColor: '#26ace2',
   },
   '& .MuiInputLabel-root':{
     color:'red,'
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#7ed957',
+    borderColor: '#26ace2',
   },
   '& .MuiOutlinedInput-notchedOutline:after': {
-    borderColor: '#7ed957',
+    borderColor: '#26ace2',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#7ed957',
+    borderColor: '#26ace2',
   },
   "&:hover .MuiInputLabel-root": {
     color: "red"

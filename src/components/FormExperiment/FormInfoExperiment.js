@@ -12,16 +12,16 @@ import { useNavigate } from "react-router-dom";
 import ChannelsEnum from "../ChannelsEnum";
 
 
-const Labels = ({ data }) => {
+const Stimuli = ({ data }) => {
 
 
   return (
-    data.labels.map((e, index) => (
+    data.stimuli.map((e, index) => (
       <Grid container spacing={2} key={index}>
         <Grid item xs={2} sx={index > 0 ? {mt:4}: {mt:0}} >
           
           <Chip
-            label={e.label}
+            label={e.name}
             key={index}
             sx={{color:'white', mt:1.5}}
           />
@@ -257,10 +257,10 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
     <Grid container spacing={2}>
 
       <Grid item xs={12}  sx={{mt:6,}}>
-        <h2 style={{color: 'white'}}>Labels</h2>
+        <h2 style={{color: 'white'}}>Stimulus</h2>
       </Grid>
       <Grid item xs={12} sx={{mb:'10vh'}}>
-        <Labels data={data}/>
+        <Stimuli data={data}/>
       </Grid>
       <Grid item xs={12}>
         <Stack direction="row" spacing={2}>
