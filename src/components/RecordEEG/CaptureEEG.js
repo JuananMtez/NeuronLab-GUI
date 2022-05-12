@@ -3,7 +3,6 @@ import PairButton from "./PairButton";
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import TableEEG from "./TableEEG"
 import { Grid } from "@mui/material";
 import DialogStyled from '../Dialog/DialogStyled'
@@ -17,7 +16,8 @@ import SelectStyled from "../Select/SelectStyled";
 
 const CaptureEEG = ({ state }) => {
   const [status, setStatus] = useState(
-    { play: false, recording: false, hasRecorded: false, pairDevice: false, time:5, typeDevice:'', nameStimulus:'', pairStimulus: false, portUdp:0, showStimulus: false }
+    { play: false, recording: false, hasRecorded: false, pairDevice: false, time:5, 
+      typeDevice:'', nameStimulus:'', pairStimulus: false, portUdp:0, showStimulus: false }
   )
   const [protocol, setProtocol] = useState('')
   const [statusDialog, setStatusDialog] = useState({open: false, name:''});

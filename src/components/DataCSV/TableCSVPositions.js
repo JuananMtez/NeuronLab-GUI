@@ -10,7 +10,7 @@ const TableCSVPositions = ({ csvid, csvsSelected }) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csvid !== undefined) {
-      axios.get(`http://localhost:8000/csv/${csvid}/same_features`)
+      axios.get(`http://localhost:8000/csv/${csvid}/same_feature`)
       .then(response => {
         setCsvs(response.data)
         setLoadingTraining(false)

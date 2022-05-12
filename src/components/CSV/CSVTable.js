@@ -256,7 +256,8 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
         columns={columns} 
         rowsSelected={rowsSelected} 
         rows={data.csvs !== undefined ? data.csvs : []} 
-        loading={false} showPreproccessing={showPreproccessing} 
+        loading={false} 
+        showPreproccessing={showPreproccessing} 
         showFeature={showFeature} 
         height='70.5vh' 
         rowPerPage={10}

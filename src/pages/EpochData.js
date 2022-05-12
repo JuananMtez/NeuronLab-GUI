@@ -493,7 +493,7 @@ const EpochData = () => {
           }
 
           <Grid item xs={12} sx={{mt:'3vh'}}>
-            <h2 style={{color:'white'}}>PSD Topomap</h2>
+            <h2 style={{color:'white'}}>PSD Chart</h2>
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row">

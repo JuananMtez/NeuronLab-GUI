@@ -12,9 +12,10 @@ const TableOwnFeatureExtraction = memo(({csv}) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`http://localhost:8000/csv/${csv}/features`)
+      axios.get(`http://localhost:8000/csv/${csv}/feature`)
       .then(response => {
-        setData(response.data)
+        if (response.data !== null) 
+          setData([response.data])
         setLoading(false)
       })
 
@@ -28,7 +29,7 @@ const TableOwnFeatureExtraction = memo(({csv}) => {
   const columns = [
   
 
-    { field: 'feature_extraction', headerName: 'Feature', width: 550, headerAlign: 'center', sortable: false},
+    { field: 'feature', headerName: 'Feature', width: 550, headerAlign: 'center', sortable: false},
 
   ]
 

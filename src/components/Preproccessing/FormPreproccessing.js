@@ -111,7 +111,7 @@ const FormPreproccessing = ({ csvs }) => {
     
   }
   const handleApply = () => {
-    window.api.applyFilter({csvs: csvs, preproccessings: preproccessings})
+    window.api.applyPreproccessing({csvs: csvs, preproccessings: preproccessings})
 
     setPreproccessings([])
   }

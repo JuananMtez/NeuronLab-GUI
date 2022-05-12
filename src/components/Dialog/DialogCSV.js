@@ -60,9 +60,9 @@ export default function DialogCSV({open, handleClose}) {
         </AppBar>
         <List>
           {
-            csvs.map(c => (
+            csvs.map((c, index) => (
               <>
-              <ListItem button>
+              <ListItem button key={index}>
               <ListItemText primary={<Typography type="h1" style={{ color: '#FFFFFF', fontSize: '30px' }}>{c.name}</Typography>} secondary={<Typography type="h1" style={{ color: '#FFFFFF', fontSize: '15px' }}>{c.subject_name}</Typography>} />
             </ListItem>
             <Divider/>

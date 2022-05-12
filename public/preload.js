@@ -37,32 +37,28 @@ let stimuli = []
 let stimuliAlwaysMemory = []
 
 
-const getDataFromLSL = () => {
-    const { samples, data, timestamps, dataOriginal } = streamInletEEG.pullChunk()
+    const getDataFromLSL = () => {
+			const { samples, data, timestamps, dataOriginal } = streamInletEEG.pullChunk()
 
-    if (samples > 0) {
-        for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < timestamps.length; j++) {
-                volts[i].shift()
-                volts[i].push({pv:data[i][j]})
-            }
-        }
+			if (samples > 0) {
+				for (let i = 0; i < data.length; i++) {
+					for (let j = 0; j < timestamps.length; j++) {
+						volts[i].shift()
+						volts[i].push({pv:data[i][j]})
+					}
+				}
 
-        if (recording) {
-            dataInput.push(dataOriginal)
-            timestamp = timestamp.concat(timestamps)
-            if (timestamp.length > 30000) {
-                fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
-                initArraysRecording()
-                cont++;
-            }
-        }
-
+				if (recording) {
+					dataInput.push(dataOriginal)
+					timestamp = timestamp.concat(timestamps)
+					if (timestamp.length > 30000) {
+						fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
+						initArraysRecording()
+						cont++;
+					}
+				}
+			}
     }
-    if (streamInletStimulus !== null) {
-        //streamInletStimulus.push_sample()
-    } 
-}
 
 
     
@@ -156,32 +152,27 @@ contextBridge.exposeInMainWorld('api', {
     },
 
     startStimulusUDPRecording: (port, stimuliParam) => {
-        server = dgram.createSocket('udp4');
-        server.on('message', (msg, rinfo) => {
-            const {stimulus, timestamp} = JSON.parse(msg)
-            if (Array.isArray(stimulus)) {
-                if (typeof stimulus[0] == 'number' && !isNaN(stimulus[0]) && Number.isInteger(stimulus[0])) {
-                    if (stimuliParam.filter(l => l.name == stimulus[0]).length === 1) {
-                        stimuli.push([stimulus, timestamp])
-                        stimuliAlwaysMemory.push({stimulus: stimulus[0], timestamp: timestamp})
-                    } else 
-                    ipcRenderer.send('open_dialog', `Stimulus with value ${stimulus[0]} is not valid. Please, type in a valid stimulus and reset`)
+			server = dgram.createSocket('udp4');
+			server.on('message', (msg, rinfo) => {
+				const {stimulus, timestamp} = JSON.parse(msg)
+				if (Array.isArray(stimulus)) {
+					if (typeof stimulus[0] == 'number' && !isNaN(stimulus[0]) && Number.isInteger(stimulus[0])) {
+						if (stimuliParam.filter(l => l.name == stimulus[0]).length === 1) {
+							stimuli.push([stimulus, timestamp])
+							stimuliAlwaysMemory.push({stimulus: stimulus[0], timestamp: timestamp})
+						} else 
+							ipcRenderer.send('open_dialog', 
+							`Stimulus with value ${stimulus[0]} is not valid. Please, type in a valid stimulus and reset`)
+					} else 
+						ipcRenderer.send('open_dialog', 'Stimulus data must be a integer value in a array. [int]')
+				} else {
+					ipcRenderer.send('open_dialog', 'Stimulus data must be a integer value in a array. [int]')
+				}
+			});
 
-
-                } else 
-                    ipcRenderer.send('open_dialog', 'Stimulus data must be a integer value in a array. [int]')
-            } else {
-                ipcRenderer.send('open_dialog', 'Stimulus data must be a integer value in a array. [int]')
-            }
-            
-
-        });
-
-        initArraysRecording()
-
-        server.bind(port);
-        recording = true
-
+			initArraysRecording()
+			server.bind(port);
+			recording = true
     },
 
     stopStimulusUDPRecording: () => {
@@ -250,44 +241,41 @@ contextBridge.exposeInMainWorld('api', {
 
 
         clear()
-
-
     },
+
     save: (name, subject_id, experiment_id) => {
         
-        fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
-        const form = new FormData();
-        let names = fs.readdirSync('tmp')
-        for (let i = 0; i < names.length; i++)
-            form.append('files', fs.createReadStream(path.join('tmp', names[i])))
+			fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
+			const form = new FormData();
+			let names = fs.readdirSync('tmp')
+			for (let i = 0; i < names.length; i++)
+				form.append('files', fs.createReadStream(path.join('tmp', names[i])))
 
-        timeCorrection = streamInletEEG.timeCorrection()
-        ipcRenderer.send('open_dialog', 'Loading...')
+			timeCorrection = streamInletEEG.timeCorrection()
+			ipcRenderer.send('open_dialog', 'Loading...')
 
-        axios({
-            method: 'post',
-            url: `http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
+			axios({
+				method: 'post',
+				url: `http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
 
-            data: form,
-            maxBodyLength: Infinity,
-            maxContentLength: Infinity,
-            headers: {
-                ...form.getHeaders()
-            },
-            adapter: require('axios/lib/adapters/http')
-        }).then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
-        .catch((error => {
-            ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')
-        })).finally(() => clear())
-           
+				data: form,
+				maxBodyLength: Infinity,
+				maxContentLength: Infinity,
+				headers: {
+						...form.getHeaders()
+				},
+				adapter: require('axios/lib/adapters/http')
+			})
+			.then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
+			.catch((error => ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')))
+			.finally(() => clear())     
     },
 
-    applyFilter: (msg) => {
-        ipcRenderer.send('open_dialog', 'Loading...')
-        axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
-        .then(response => ipcRenderer.send('open_dialog', response.data))
-
-        .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
+    applyPreproccessing: (msg) => {
+			ipcRenderer.send('open_dialog', 'Loading...')
+			axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
+			.then(response => ipcRenderer.send('open_dialog', response.data))
+      .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
     },
 
     applyIca: (id_csv, msg) => {
@@ -305,22 +293,21 @@ contextBridge.exposeInMainWorld('api', {
     },
 
     applyTrainingMachine: (msg) => {
-        ipcRenderer.send('open_dialog', 'Loading...')
-
-        axios.post(`http://localhost:8000/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
-        .then(response => ipcRenderer.send('open_dialog', 'Training model created'))
-        .catch(error => {
-            ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
-        } )    },
-
+			ipcRenderer.send('open_dialog', 'Loading...')
+			axios.post(`http://localhost:8000/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
+			.then(response => ipcRenderer.send('open_dialog', 'Training model created'))
+			.catch(error => 
+				ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? 
+				error.response.data.detail : 'A server internal error has occurred'))    
+			},
     applyTrainingDeep: (msg) => {
-        ipcRenderer.send('open_dialog', 'Loading...')
-
-        axios.post(`http://localhost:8000/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
-        .then(response => ipcRenderer.send('open_dialog', 'Training model created'))
-        .catch(error => {
-            ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
-        } )    
+			ipcRenderer.send('open_dialog', 'Loading...')
+			axios.post(`http://localhost:8000/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
+			.then(response => ipcRenderer.send('open_dialog', 'Training model created'))
+			.catch(error => {
+				ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ?
+				error.response.data.detail : 'A server internal error has occurred')
+			})    
     },
 
 
