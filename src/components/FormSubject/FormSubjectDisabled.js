@@ -3,14 +3,18 @@ import Grid from '@mui/material/Grid';
 import TextFieldDisabled from '../TextFieldDisabled/TextFieldDisabled'
 import  Container  from "@mui/material/Container"
 import Chip from '@mui/material/Chip';
-import BackButtonFixed from "../BackButton/BackButtonFixed";
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button'
+import { useNavigate } from "react-router-dom";
 
 
 
 const FormSubjectDisabled = ({ data, init }) => {
-  
-  
+  const navigate = useNavigate()
+
+  const handleBacklBtn = () => {
+    navigate('../subjects', { state: { sidebar: init} })
+  }  
   return ( 
     <Container maxWidth="lg">
       <Box
@@ -22,7 +26,17 @@ const FormSubjectDisabled = ({ data, init }) => {
     >
       
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
+          <Button
+            onClick={handleBacklBtn}
+            size="small"
+            variant="contained"
+          >
+            Back
+          </Button>
+          
+        </Grid>
+        <Grid item xs={6} sx={{mt:'3vh'}}>
           <TextFieldDisabled 
           fullWidth
           
@@ -30,7 +44,7 @@ const FormSubjectDisabled = ({ data, init }) => {
           name="name"
           label="Name"/>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} sx={{mt:'3vh'}}>
           <TextFieldDisabled 
             fullWidth
             value={data.surname}
@@ -78,7 +92,7 @@ const FormSubjectDisabled = ({ data, init }) => {
         
       </Grid>
     </Box>
-    <BackButtonFixed url="../subjects" init={init} fixed={true}/>
+    
     </Container>
     
   )

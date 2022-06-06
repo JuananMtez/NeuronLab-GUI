@@ -23,7 +23,7 @@ const Home = () => {
 
         </Box>
         <p className="text">Application to provide researchers to study brain signals obtained from different subjects.</p>
-        <p className="text">Implementation of a framework capable of EEG signal acquisition from BCI or other external devices, signal proccessing and machine learning using trained classifiers.</p>
+        <p className="text">Implementation of a framework capable of EEG signal acquisition from BCI or other external devices, signal proccessing and ML/DL using trained classifiers.</p>
         <p className="text">This project is part of the End of Degree Project in Computer Engineering at the University of Murcia.</p>
 
         <Grid container spacing={1}>

@@ -125,9 +125,9 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
             init={init}
           />
         }
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           <Grid item xs={12} sx={{mt:6}}>
-            <h2 style={{color: 'white'}}>CSV</h2>
+            <h2 style={{color: 'white'}}>CSVs</h2>
 
           </Grid>
           <Grid item xs={12}>

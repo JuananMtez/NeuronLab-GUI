@@ -27,6 +27,7 @@ const FormSubject = ({ init }) => {
   const navigate = useNavigate()
 
 
+
   let disabled = value.name === '' || value.surname === '' || value.gender === '' || value.age === '' || (selected && value.mental_conditions.length < 1) 
 
 
@@ -79,6 +80,7 @@ const FormSubject = ({ init }) => {
 
     let data = {...value}
     
+    
     if (!selected)
       data = {...value, mental_conditions:[{condition: 'No'}]}
     
@@ -86,7 +88,10 @@ const FormSubject = ({ init }) => {
     .then(response => navigate('../subjects', { state: { sidebar: init }}))
   
   }
-  
+
+  const handleBacklBtn = () => {
+    navigate('../subjects', { state: { sidebar: init} })
+  }  
   return ( 
     <Container maxWidth="lg">
       <Box
@@ -99,7 +104,17 @@ const FormSubject = ({ init }) => {
       
 
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+      <Grid item xs={12}>
+          <Button
+            onClick={handleBacklBtn}
+            size="small"
+            variant="contained"
+          >
+            Back
+          </Button>
+          
+        </Grid>
+        <Grid item xs={6} sx={{mt:'3vh'}}>
           <TextFieldStyled 
           fullWidth
           required
@@ -108,7 +123,7 @@ const FormSubject = ({ init }) => {
           name="name"
           label="Name"/>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} sx={{mt:'3vh'}}>
           <TextFieldStyled 
             fullWidth
             required
@@ -220,7 +235,6 @@ const FormSubject = ({ init }) => {
         Add
       </Button>
     </Box>
-    <BackButtonFixed url="../subjects" init={init} fixed={true}/>
     </Container>
     
   )

@@ -437,8 +437,8 @@ const TrainingForm = ({ csv, experiment }) => {
           text={name}
           handleText={handleName}
           handleClick={handleTrainingBtn}
-          title="Copy CSV"
-          description="Type in a name for the new CSV"
+          title="Apply IA Algorithm"
+          description="Type in a name for the new model"
         />
       </Grid>
     </Grid>
