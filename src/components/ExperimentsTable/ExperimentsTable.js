@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import { OpenInNewSharp } from '@mui/icons-material';
 import { DeleteSharp } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom";
-
+import { properties } from '../../properties';
 
 
 
@@ -16,7 +16,7 @@ const ExperimentsTable = ({ init }) => {
   const navigate = useNavigate()
 
   const deleteSubject = (id) => {
-    axios.delete(`http://localhost:8000/experiment/${id}`)
+    axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/${id}`)
     setRows(rows.filter(e => e.id !== id))
   }
   
@@ -76,12 +76,14 @@ const ExperimentsTable = ({ init }) => {
   useEffect(() => {
     let isMounted = true;  
     const user = JSON.parse(localStorage.getItem('user'))
-    axios.get(`http://localhost:8000/experiment/filter/researcher/${user.id}`)
+
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/filter/researcher/${user.id}`)
     .then(response => {
       if (isMounted) {
         setLoading(false)
         setRows(response.data)
       }
+
       return () => { isMounted = false };
 
     })

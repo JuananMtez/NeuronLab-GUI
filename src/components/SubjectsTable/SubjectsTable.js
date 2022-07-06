@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import { OpenInNewSharp } from '@mui/icons-material';
 import { DeleteSharp } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom";
-
+import { properties } from '../../properties';
 
 
 
@@ -16,7 +16,7 @@ const SubjectsTable = ({ sidebar }) => {
   const navigate = useNavigate()
 
   const deleteSubject = (id) => {
-    axios.delete(`http://localhost:8000/subject/${id}`)
+    axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/${id}`)
     setRows(rows.filter(e => e.id !== id))
   }
   
@@ -79,7 +79,7 @@ const SubjectsTable = ({ sidebar }) => {
   
   useEffect(() => {
     let isMounted = true;  
-    axios.get('http://localhost:8000/subject/')
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`)
     .then(response => {
       if (isMounted) {
         setLoading(false)

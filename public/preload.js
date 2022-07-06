@@ -9,6 +9,11 @@ const axios = require('axios').default;
 const path = require('path')
 
 
+// Connection 
+const protocol = 'TO BE DEFINED'
+const url = 'TO BE DEFINED'
+const port = 'TO BE DEFINED'
+
 // LSL Device stream
 let streamsEEG = null;
 let streamInletEEG = null;
@@ -16,7 +21,6 @@ let timeCorrection = 0
 
 // LSL Stimulus stream
 let streamsStimulus = null
-let streamInletStimulus = null;
 
 
 // UDP Stimulus stream
@@ -90,7 +94,6 @@ const clear = () => {
     
     // LSL Stimulus stream
     streamsStimulus = null
-    streamInletStimulus = null;
     
     // UDP Stimulus stream
     server = null
@@ -139,14 +142,12 @@ contextBridge.exposeInMainWorld('api', {
 
     startStimulusLSLRecording: () => {
         if (streamsStimulus !== null && streamsStimulus.length > 0) {
-            streamInletStimulus = new lsl.StreamInlet(streamsStimulus[0])
             initArraysRecording()
             recording=true
         }
     },
 
     stopStimulusLSLRecording: () => {
-        streamInletStimulus = null
         recording = false
 
     },
@@ -192,7 +193,6 @@ contextBridge.exposeInMainWorld('api', {
 
     closeStreamStimulus: () => {
         streamsStimulus = null
-        streamInletStimulus = null
 
     },
 
@@ -256,7 +256,7 @@ contextBridge.exposeInMainWorld('api', {
 
 			axios({
 				method: 'post',
-				url: `http://localhost:8000/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
+				url: `${protocol}://${url}:${port}/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
 
 				data: form,
 				maxBodyLength: Infinity,
@@ -273,7 +273,7 @@ contextBridge.exposeInMainWorld('api', {
 
     applyPreproccessing: (msg) => {
 			ipcRenderer.send('open_dialog', 'Loading...')
-			axios.post('http://127.0.0.1:8000/csv/preproccessing/list', msg, { adapter: require('axios/lib/adapters/http')}) 
+			axios.post(`${protocol}://${url}:${port}/csv/preproccessing/list`, msg, { adapter: require('axios/lib/adapters/http')}) 
 			.then(response => ipcRenderer.send('open_dialog', response.data))
       .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
     },
@@ -281,7 +281,7 @@ contextBridge.exposeInMainWorld('api', {
     applyIca: (id_csv, msg) => {
         ipcRenderer.send('open_dialog', 'Loading...')
 
-        axios.post(`http://127.0.0.1:8000/csv/${id_csv}/ica/apply`, msg, { adapter: require('axios/lib/adapters/http')}) 
+        axios.post(`${protocol}://${url}:${port}/csv/${id_csv}/ica/apply`, msg, { adapter: require('axios/lib/adapters/http')}) 
         .then(response => ipcRenderer.send('open_dialog', 'Components excluded correctly'))
 
         .catch(error => ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred'))
@@ -289,12 +289,12 @@ contextBridge.exposeInMainWorld('api', {
 
     downloadCSV: (idCSV) => {
 
-        ipcRenderer.send('download-button', {url: `http://localhost:8000/csv/${idCSV}/download`}) 
+        ipcRenderer.send('download-button', {url: `${protocol}://${url}:${port}/csv/${idCSV}/download`}) 
     },
 
     applyTrainingMachine: (msg) => {
 			ipcRenderer.send('open_dialog', 'Loading...')
-			axios.post(`http://localhost:8000/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
+			axios.post(`${protocol}://${url}:${port}/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
 			.then(response => ipcRenderer.send('open_dialog', 'Training model created'))
 			.catch(error => 
 				ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? 
@@ -302,7 +302,7 @@ contextBridge.exposeInMainWorld('api', {
 			},
     applyTrainingDeep: (msg) => {
 			ipcRenderer.send('open_dialog', 'Loading...')
-			axios.post(`http://localhost:8000/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
+			axios.post(`${protocol}://${url}:${port}/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
 			.then(response => ipcRenderer.send('open_dialog', 'Training model created'))
 			.catch(error => {
 				ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ?
@@ -314,7 +314,7 @@ contextBridge.exposeInMainWorld('api', {
     applyFeature: (msg) => {
         ipcRenderer.send('open_dialog', 'Loading...')
 
-        axios.post('http://127.0.0.1:8000/csv/feature/list', msg, { adapter: require('axios/lib/adapters/http')}) 
+        axios.post(`${protocol}://${url}:${port}/csv/feature/list`, msg, { adapter: require('axios/lib/adapters/http')}) 
         .then(response => ipcRenderer.send('open_dialog', response.data))
 
         .catch(error => {

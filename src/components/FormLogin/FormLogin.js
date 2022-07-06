@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from "axios";
 import "./FormLogin.css"
+import { properties } from '../../properties';
 
 const FormLogin = () => {
 
@@ -36,7 +37,7 @@ const FormLogin = () => {
   }
 
   const handleLogin = () => {
-    axios.post('http://127.0.0.1:8000/researcher/login', value)
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/researcher/login`, value)
     .then(response => {
       localStorage.setItem("user", JSON.stringify(response.data));
       navigate('../home')

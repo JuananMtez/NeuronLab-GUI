@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import axios from 'axios';
+import { properties } from '../../properties';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,7 +22,7 @@ export default function DialogCSV({open, handleClose}) {
 
   useEffect(() => {
     if (open.id !== undefined && open.id !== 0)
-    axios.get(`http://localhost:8000/training/${open.id}/csvs`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${open.id}/csvs`)
     .then(response => {
       setCsvs(response.data)
     })

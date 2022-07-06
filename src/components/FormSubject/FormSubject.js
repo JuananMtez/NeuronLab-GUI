@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
-
+import { properties } from "../../properties";
 
 import { useState } from "react";
 import BackButtonFixed from "../BackButton/BackButtonFixed";
@@ -84,7 +84,7 @@ const FormSubject = ({ init }) => {
     if (!selected)
       data = {...value, mental_conditions:[{condition: 'No'}]}
     
-    axios.post('http://127.0.0.1:8000/subject/', data)
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`, data)
     .then(response => navigate('../subjects', { state: { sidebar: init }}))
   
   }

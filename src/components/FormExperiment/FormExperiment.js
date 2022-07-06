@@ -15,6 +15,7 @@ import FormControl from '@mui/material/FormControl';
 import FormEEG from "./FormEEG";
 import SelectStyled from "../Select/SelectStyled";
 import ChannelsEnum from "../ChannelsEnum";
+import { properties } from "../../properties";
 
 
 
@@ -36,7 +37,7 @@ const FormExperiment = ({ init }) => {
 
   useEffect(() => {
     let isMounted = true;  
-    axios.get('http://localhost:8000/subject/')
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`)
     .then(response => {
       if (isMounted) {
         setSubjects(response.data)
@@ -168,7 +169,7 @@ const FormExperiment = ({ init }) => {
       subjects: subjectsSelected
     } 
 
-    axios.post('http://127.0.0.1:8000/experiment/', experiment)
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/`, experiment)
     .then(response => navigate('../experiments', { state: { sidebar: init} }))
   }
 

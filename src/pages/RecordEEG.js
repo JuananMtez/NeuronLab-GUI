@@ -1,5 +1,4 @@
 import Sidebar from "../components/Sidebar/Sidebar"
-import { useState } from "react"
 import { useLocation } from "react-router-dom"
 import { Container, Grid } from "@mui/material";
 import CaptureEEG from "../components/RecordEEG/CaptureEEG.js";

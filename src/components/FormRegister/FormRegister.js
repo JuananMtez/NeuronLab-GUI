@@ -9,7 +9,7 @@ import BackButton from "../BackButton/BackButton"
 import axios from "axios";
 import "./FormRegister.css"
 import { useNavigate } from "react-router-dom";
-
+import { properties } from "../../properties";
 
 const FormRegister = () => {
 
@@ -35,7 +35,7 @@ const FormRegister = () => {
 
   const handleSubmit = () => {
 
-    axios.post('http://127.0.0.1:8000/researcher/', value)
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/researcher/`, value)
     .then(response => navigate('../login'))
     .catch(error => {
       if (error.response.status === 409) {

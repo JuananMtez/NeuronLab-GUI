@@ -3,7 +3,7 @@ import FilterTable from "../CSV/FilterTable"
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-
+import { properties } from "../../properties"
 
 const PreproccesingCSV = ({ csv, experiment, sidebar }) => {
 
@@ -14,7 +14,7 @@ const PreproccesingCSV = ({ csv, experiment, sidebar }) => {
     let isMounted = true
   
     if (isMounted && csv.id !== undefined) {
-      axios.get(`http://localhost:8000/csv/${csv.id}/preproccessing`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/preproccessing`)
       .then(response => {
         setPreproccessing(response.data)
       })

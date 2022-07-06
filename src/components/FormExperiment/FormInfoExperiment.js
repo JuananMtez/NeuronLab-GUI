@@ -10,7 +10,7 @@ import axios from "axios";
 import PlayCircleFilledWhiteSharpIcon from '@mui/icons-material/PlayCircleFilledWhiteSharp';
 import { useNavigate } from "react-router-dom";
 import ChannelsEnum from "../ChannelsEnum";
-
+import { properties } from "../../properties";
 
 const Stimuli = ({ data }) => {
 
@@ -53,7 +53,7 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
       <IconButton 
         onClick={e => {
           e.stopPropagation()
-          axios.patch(`http://localhost:8000/experiment/add/${data.id}/researchers`,{researchers_id: [params.id]})
+          axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/add/${data.id}/researchers`,{researchers_id: [params.id]})
           .then(response => {
             let research = researchers.find(re => re.id === params.id)
             handleResearchers(researchers.filter(r => r.id !== params.id))
@@ -81,7 +81,7 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
       <IconButton 
         onClick={e => {
           e.stopPropagation()
-          axios.patch(`http://localhost:8000/experiment/add/${data.id}/subjects`,{ subjects_id: [params.id]})
+          axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/add/${data.id}/subjects`,{ subjects_id: [params.id]})
           .then(response => {
             let subject = subjects.find(s => s.id === params.id)
 
@@ -152,7 +152,7 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
           onClick={e => {
             e.stopPropagation()
             if (params.id !== data.researcher_creator_id) {
-              axios.patch(`http://localhost:8000/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]})
+              axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]})
               .then(response => {
                 handleResearchers([...researchers, data.researchers.find(re => re.id === params.id)])
                 handleExperiments({
@@ -173,7 +173,7 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
         onClick={e => {
           e.stopPropagation()
           if (params.id !== data.researcher_creator_id) {
-            axios.patch(`http://localhost:8000/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]})
+            axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]})
             handleResearchers([...researchers, data.researchers.find(re => re.id === params.id)])
             handleExperiments({
               ...data,

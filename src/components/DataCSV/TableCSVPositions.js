@@ -1,7 +1,8 @@
 
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "../Table/Table";
 import axios from "axios";
+import { properties } from "../../properties";
 
 const TableCSVPositions = ({ csvid, csvsSelected }) => {
 
@@ -10,7 +11,7 @@ const TableCSVPositions = ({ csvid, csvsSelected }) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csvid !== undefined) {
-      axios.get(`http://localhost:8000/csv/${csvid}/same_feature`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csvid}/same_feature`)
       .then(response => {
         setCsvs(response.data)
         setLoadingTraining(false)

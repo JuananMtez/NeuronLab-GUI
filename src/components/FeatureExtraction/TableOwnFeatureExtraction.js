@@ -2,7 +2,7 @@ import { useEffect, useState, memo } from "react"
 import axios from "axios"
 import Table from '../Table/Table';
 import { Grid } from "@mui/material";
-
+import { properties } from "../../properties";
 
 const TableOwnFeatureExtraction = memo(({csv}) => {
 
@@ -12,7 +12,7 @@ const TableOwnFeatureExtraction = memo(({csv}) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`http://localhost:8000/csv/${csv}/feature`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv}/feature`)
       .then(response => {
         if (response.data !== null) 
           setData([response.data])

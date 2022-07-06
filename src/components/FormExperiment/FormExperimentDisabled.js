@@ -10,7 +10,7 @@ import ReloadButton from "../ReloadButton/ReloadButton"
 import axios from "axios";
 import FormPreproccessing from "../Preproccessing/FormPreproccessing";
 import FormFeatureExtraction from "../FeatureExtraction/FormFeatureExtraction";
-
+import { properties } from "../../properties";
 
 const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleExperiments, subjects, handleSubjects, init }) => {
   const [showInfo, setInfo] = useState(false)
@@ -20,7 +20,7 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
 
 
   const handleReload = () => {
-    axios.get(`http://localhost:8000/csv/${data.id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${data.id}`)
     .then(response => {
       handleExperiments({
         ...data,

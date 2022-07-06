@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import axios from "axios"
 import FormExperimentDisabled from "../components/FormExperiment/FormExperimentDisabled"
-
+import { properties } from "../properties"
 
 const DataExperiment = () => {
 
@@ -18,13 +18,13 @@ const DataExperiment = () => {
   const id = state.id
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/experiment/${id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/${id}`)
     .then(response => setExperiment(response.data))
 
-    axios.get(`http://localhost:8000/researcher/experiment/${id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/researcher/experiment/${id}`)
     .then(response => setResearchersNot(response.data))
 
-    axios.get(`http://localhost:8000/subject/not/${id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/not/${id}`)
     .then(response => setSubjectsNot(response.data))
   }, [id])
 

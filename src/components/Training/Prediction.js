@@ -7,7 +7,7 @@ import DialogCSV from "../Dialog/DialogCSV";
 import DialogDescription from "../Dialog/DialogDescription";
 import IconButton from '@mui/material/IconButton';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-
+import { properties } from "../../properties";
 const Prediction = ({ csv }) => {
 
   const [loading, setLoading] = useState(true)
@@ -36,7 +36,7 @@ const Prediction = ({ csv }) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`http://localhost:8000/training/models/csv/${csv.id}`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/models/csv/${csv.id}`)
       .then(response => {
         setData(response.data)
         setLoading(false)
@@ -71,7 +71,7 @@ const Prediction = ({ csv }) => {
         e.stopPropagation() 
         setLoadingPredict(true)
         setText({text: '', n_jumps: 0})
-        axios.get(`http://localhost:8000/training/${params.id}/predict/csv/${csv.id}`)
+        axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}/predict/csv/${csv.id}`)
         .then(response => {
           setText(response.data)
         })
@@ -101,7 +101,7 @@ const SummaryBtn = (params) => {
         e.stopPropagation() 
         setLoadingSummary(true)
         setText({text: '', n_jumps: 0})
-        axios.get(`http://localhost:8000/training/${params.id}/predict/summary`)
+        axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}/predict/summary`)
         .then(response => {
           setText(response.data)
         })

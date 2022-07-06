@@ -7,6 +7,7 @@ import { CustomSelect, StyledOption } from "../components/Select/CustomSelect";
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from "axios"
 import Checkbox from '@mui/material/Checkbox';
+import { properties } from "../properties"
 
 
 const ICACsv = () => {
@@ -72,7 +73,7 @@ const ICACsv = () => {
 
   const handlePlotComponents = () => {
     setLoading(true)
-    axios.post(`http://localhost:8000/csv/${csv.id}/ica/plot/components`, {method:icaMethod})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/ica/plot/components`, {method:icaMethod})
     .then(response => {
       setPng(response.data.img)
       setNumComponents([...Array(response.data.components).keys()])
@@ -85,7 +86,7 @@ const ICACsv = () => {
 
   const handlePlotPropierties = () => {
     setLoadingProp(true)
-    axios.post(`http://localhost:8000/csv/${csv.id}/ica/plot/properties`, {method:icaMethod})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/ica/plot/properties`, {method:icaMethod})
     .then(response => {
       setPngProperties(response.data)
       setLoadingProp(false)

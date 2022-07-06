@@ -8,7 +8,7 @@ import ReloadButton from "../ReloadButton/ReloadButton";
 import DialogDescription from "../Dialog/DialogDescription";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import DialogChart from '../Dialog/DialogChart'
-
+import { properties } from "../../properties";
 
 const TableOwnTraining = memo(({csv}) => {
 
@@ -44,7 +44,7 @@ const TableOwnTraining = memo(({csv}) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`http://localhost:8000/training/csv/${csv}`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/csv/${csv}`)
       .then(response => {
         setData(response.data)
         setLoading(false)
@@ -60,7 +60,7 @@ const TableOwnTraining = memo(({csv}) => {
       <IconButton 
       onClick={e => {
         e.stopPropagation() 
-        axios.delete(`http://localhost:8000/training/${params.id}`)
+        axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}`)
         .then(response => {
           let model = data.find(m => m.id = params.id)
           setData(data.filter(d => model.id !== d.id))
@@ -74,7 +74,7 @@ const TableOwnTraining = memo(({csv}) => {
   }
 
   const handleReload = () => {
-    axios.get(`http://localhost:8000/training/csv/${csv}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/csv/${csv}`)
     .then(response => {
       setData(response.data)
     })

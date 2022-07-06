@@ -81,16 +81,7 @@ const CaptureEEG = ({ state }) => {
     })
   }
 
-  const handlePairStimulusBtn = () => {
 
-    window.api.searchStreams('stimulus', status.nameStimulus)
-    .then(e => {
-      setStatus({
-        ...status,
-        pairStimulus: e,
-      })
-    })
-  }
 
   const handleUnpairDeviceBtn = () => {
     window.api.closeStream()
@@ -101,15 +92,7 @@ const CaptureEEG = ({ state }) => {
     })
   }
 
-    const handleUnpairStimulusBtn = () => {
-      window.api.closeStreamStimulus()
-      setStatus({
-        ...status,
-        pairStimulus: false,
-        play: false
-      })
-  
-  }
+
   const handleSelectWindow = (event) => {
     setStatus({
       ...status,
@@ -132,10 +115,7 @@ const CaptureEEG = ({ state }) => {
 
   const getStimulusProtocol = () => {
     switch(protocol) {
-      case 'lsl':
-        return (      
-          <PairButton disabled={status.play} name="nameStimulus" pair={status.pairStimulus} valueTextField={status.nameStimulus} handlePairBtn={handlePairStimulusBtn} handleUnpairBtn={handleUnpairStimulusBtn} handleOnChange={onChangeInput} text="stimulus"/>
-        )
+  
       case 'udp':
         return (
           <Grid item xs={12} sx={{ml:'2vh'}}>
@@ -159,11 +139,9 @@ const CaptureEEG = ({ state }) => {
 
   const handleStartRecording = () => {
     
-
     if (protocol === 'udp')
       window.api.startStimulusUDPRecording(status.portUdp, state.experiment.stimuli)
-    else 
-      window.api.startStimulusLSLRecording()
+
 
 
     setStatus({
@@ -177,8 +155,7 @@ const CaptureEEG = ({ state }) => {
 
     if (protocol === 'udp')
       window.api.stopStimulusUDPRecording()
-    else 
-      window.api.stopStimulusLSLRecording()
+   
 
     setStatus({
       ...status,
@@ -268,7 +245,7 @@ const CaptureEEG = ({ state }) => {
         <Button
           onClick={handleStartRecording}
           variant="contained"
-          disabled={!status.play || (!status.pairDevice)|| (protocol === 'lsl' && !status.pairStimulus) || (protocol === '') || ( protocol === 'udp' && (isNaN(status.portUdp) || status.portUdp < 1))}
+          disabled={!status.play || (!status.pairDevice) || (protocol === '') || ( protocol === 'udp' && (isNaN(status.portUdp) || status.portUdp < 1))}
           color="success"
           fullWidth
           size="small"
@@ -344,7 +321,6 @@ const CaptureEEG = ({ state }) => {
           sx={{color:'white'}}
           disabled={status.play || status.hasRecorded}
         >
-          <MenuItem value={'lsl'}>LSL</MenuItem>
           <MenuItem value={'udp'}>UDP</MenuItem>
 
         </SelectStyled>

@@ -10,6 +10,7 @@ import { OpenInNewSharp } from '@mui/icons-material';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DownloadIcon from '@mui/icons-material/Download';
 import TableCsvCustom from '../Table/TableCsvCustom';
+import { properties } from '../../properties';
 
 
 
@@ -36,7 +37,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   }
   const createCopy = () => {
     setLoadingCopy(true)
-    axios.post(`http://localhost:8000/csv/${idCSV}`, {name: name})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${idCSV}`, {name: name})
     .then(response => {
       let a = [...data.csvs]
       a.push(response.data)
@@ -66,7 +67,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   }
 
   const changeName = () => {
-    axios.patch(`http://localhost:8000/csv/${idCSV}`, {name: name})
+    axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${idCSV}`, {name: name})
     .then(response => {
       let a = [...data.csvs]
 
@@ -116,7 +117,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
         <IconButton 
         onClick={e => {
           e.stopPropagation() 
-          axios.delete(`http://localhost:8000/csv/${params.id}`)
+          axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${params.id}`)
           .then(response => {
             handleData({
               ...data,

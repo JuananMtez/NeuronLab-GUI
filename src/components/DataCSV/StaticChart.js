@@ -13,6 +13,7 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import TableScroll from "../Table/TableScroll";
+import { properties } from "../../properties";
 
 const minDistance = 1
 
@@ -65,7 +66,7 @@ const StaticChart = memo(({ csv, experiment }) => {
       data: {},
       loading: true
     })
-    axios.get(`http://localhost:8000/csv/${csv.id}/plot/chart?beginning=${slide[0]}&duraction=${slide[1]}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/plot/chart?beginning=${slide[0]}&duraction=${slide[1]}`)
     .then(response => {
       setStatus({
         data: response.data,
