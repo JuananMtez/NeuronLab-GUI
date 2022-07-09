@@ -69,8 +69,8 @@ const TableEEG = memo(({ device, play, pair}) => {
     () => [
       {
         Header: () => null,
-        maxWidth: 80,
-        minWidth: 30,
+        maxWidth: 100,
+        minWidth: 60,
         width: 60,
         id: 'channel',
         Cell: ({ row }) => {
@@ -83,7 +83,7 @@ const TableEEG = memo(({ device, play, pair}) => {
         Header: () => null,
         id: 'chart',       
         maxWidth: 300,
-        minWidth: 200,
+        minWidth: 300,
         width: 300,
 
         Cell: ({ row }) => {
@@ -92,9 +92,9 @@ const TableEEG = memo(({ device, play, pair}) => {
       },
       {
         Header: () => null,
-        maxWidth: 90,
-        minWidth: 90,
-        width: 90,
+        maxWidth: 200,
+        minWidth: 175,
+        width: 140,
         id: 'lastVolt',  
         Cell: ({ row }) => {
           return (<p style={{color:'white', fontSize:'15px'} }>{items[row.id][items[row.id].length -1 ].pv.toFixed(2)} uVrms</p>)

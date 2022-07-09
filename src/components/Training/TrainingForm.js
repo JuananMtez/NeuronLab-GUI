@@ -12,7 +12,7 @@ const TrainingForm = ({ csv, experiment }) => {
   const [learning, setLearning] = useState('')
   const [algorithmMachine, setAlgorithmMachine] = useState('')
   const [knnNeigbour, setKnnNreigbour] = useState(0)
-  const [randomForest, setRandomeForest] = useState({max_depth: 0, n_estimators: 0, random_state: 0})
+  const [randomForest, setRandomeForest] = useState({n_estimators: 0})
   const [svm, setSvm] = useState('')
   const [percent, setPercent] = useState({training_data: 0, testing_data: 0})
   const [name, setName] = useState('')
@@ -43,7 +43,7 @@ const TrainingForm = ({ csv, experiment }) => {
           algorithm = {n_neighbors: knnNeigbour}
           break
         case 'Random Forest':
-          algorithm = {max_depth: randomForest.max_depth, n_estimators: randomForest.n_estimators, random_state: randomForest.random_state}
+          algorithm = {n_estimators: randomForest.n_estimators}
           break
         case 'SVM':
           algorithm = {kernel: svm}
@@ -80,7 +80,7 @@ const TrainingForm = ({ csv, experiment }) => {
     setLearning('')
     setAlgorithmMachine('')
     setKnnNreigbour(0)
-    setRandomeForest({max_depth: 0, n_estimators: 0, random_state: 0})
+    setRandomeForest({n_estimators: 0})
     setSvm('')
     setPercent({training_data: 0, testing_data: 0})
     setName('')
@@ -172,13 +172,7 @@ const TrainingForm = ({ csv, experiment }) => {
             {
               algorithmMachine === 'Random Forest' &&
             <>
-              <TextFieldStyled
-                value={randomForest.max_depth}
-                name="max_depth"
-                label="Maximum depth of the tree"      
-                type="number"
-                onChange={handleRandomForest} 
-              />               
+            
               <TextFieldStyled
                 value={randomForest.n_estimators}
                 name="n_estimators"
@@ -186,13 +180,7 @@ const TrainingForm = ({ csv, experiment }) => {
                 type="number"
                 onChange={handleRandomForest} 
              />
-              <TextFieldStyled
-                value={randomForest.n_stimators}
-                name="random_state"
-                label="Control the random number"      
-                type="number"
-                onChange={handleRandomForest} 
-              />
+
             </>
             }
             {
@@ -417,8 +405,7 @@ const TrainingForm = ({ csv, experiment }) => {
             learning === '' ||
             (learning === 'deep' && (layers.length === 0 || modelData.optimizer === '' || modelData.loss === '' || modelData.epochs === '' || (byDefault === 'manual' && learningRate === 0))) ||
             (learning === 'machine' && algorithmMachine === '') ||
-            (learning === 'machine' && algorithmMachine === 'Random Forest' && (
-              randomForest.max_depth === 0 || randomForest.n_estimators === 0 || randomForest.random_state === 0)) ||
+            (learning === 'machine' && algorithmMachine === 'Random Forest' && (randomForest.n_estimators === 0)) ||
             (learning === 'machine' && algorithmMachine === 'KNN' && knnNeigbour === 0) ||
 
             (learning === 'machine' && algorithmMachine === 'SVM' && svm === '') ||

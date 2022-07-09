@@ -5,7 +5,7 @@ const ChartEEG = ({ items, color }) => {
   return (
 
     <LineChart 
-      width={1000} 
+      width={1175} 
       height={50} 
       data={items}
     >

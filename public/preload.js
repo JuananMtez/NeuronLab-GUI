@@ -10,9 +10,9 @@ const path = require('path')
 
 
 // Connection 
-const protocol = 'TO BE DEFINED'
-const url = 'TO BE DEFINED'
-const port = 'TO BE DEFINED'
+const protocol = 'http'
+const url = '192.168.56.111'
+const port = '8000'
 
 // LSL Device stream
 let streamsEEG = null;

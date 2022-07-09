@@ -170,7 +170,7 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   const columns = [
   
     { field: 'name', headerName: 'Name', width: 200, headerAlign: 'center', sortable: false},
-    { field: 'date', headerName: 'Date', width: 200, headerAlign: 'center', sortable: true},
+    { field: 'date', headerName: 'Date', width: 215, headerAlign: 'center', sortable: true},
     
     { field: 'subject_name', headerName: 'Subject', width: 250, headerAlign: 'center', sortable: true},
     { field: 'type', headerName: 'Type', width: 150, headerAlign: 'center', sortable: false},     
