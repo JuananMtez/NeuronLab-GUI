@@ -44,7 +44,10 @@ const TableOwnTraining = memo(({csv}) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/csv/${csv}`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/csv/${csv}`,
+      { headers: {
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+       }})
       .then(response => {
         setData(response.data)
         setLoading(false)
@@ -60,7 +63,10 @@ const TableOwnTraining = memo(({csv}) => {
       <IconButton 
       onClick={e => {
         e.stopPropagation() 
-        axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}`)
+        axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}`,
+        { headers: {
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+         }})
         .then(response => {
           let model = data.find(m => m.id = params.id)
           setData(data.filter(d => model.id !== d.id))
@@ -74,7 +80,10 @@ const TableOwnTraining = memo(({csv}) => {
   }
 
   const handleReload = () => {
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/csv/${csv}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/csv/${csv}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       setData(response.data)
     })

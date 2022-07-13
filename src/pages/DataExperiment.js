@@ -18,13 +18,22 @@ const DataExperiment = () => {
   const id = state.id
 
   useEffect(() => {
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/${id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/${id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => setExperiment(response.data))
 
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/researcher/experiment/${id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/researcher/experiment/${id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => setResearchersNot(response.data))
 
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/not/${id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/not/${id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => setSubjectsNot(response.data))
   }, [id])
 

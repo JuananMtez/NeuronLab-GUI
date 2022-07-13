@@ -14,7 +14,6 @@ import Stack from '@mui/material/Stack';
 import { properties } from "../../properties";
 
 import { useState } from "react";
-import BackButtonFixed from "../BackButton/BackButtonFixed";
 import SelectStyled from "../Select/SelectStyled";
 
 
@@ -84,7 +83,10 @@ const FormSubject = ({ init }) => {
     if (!selected)
       data = {...value, mental_conditions:[{condition: 'No'}]}
     
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`, data)
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`, data,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => navigate('../subjects', { state: { sidebar: init }}))
   
   }

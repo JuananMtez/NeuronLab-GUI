@@ -37,7 +37,10 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   }
   const createCopy = () => {
     setLoadingCopy(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${idCSV}`, {name: name})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${idCSV}`, {name: name},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...data.csvs]
       a.push(response.data)
@@ -50,6 +53,11 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
       setName('')
       setIdCSV('')
 
+    }).catch(e => {
+      setLoadingCopy(false)
+      setOpen(false)
+      setName('')
+      setIdCSV('')
     })
   }
 
@@ -67,7 +75,10 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   }
 
   const changeName = () => {
-    axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${idCSV}`, {name: name})
+    axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${idCSV}`, {name: name},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...data.csvs]
 
@@ -117,7 +128,10 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
         <IconButton 
         onClick={e => {
           e.stopPropagation() 
-          axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${params.id}`)
+          axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${params.id}`,
+          { headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+           }})
           .then(response => {
             handleData({
               ...data,

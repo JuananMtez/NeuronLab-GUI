@@ -73,7 +73,10 @@ const ICACsv = () => {
 
   const handlePlotComponents = () => {
     setLoading(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/ica/plot/components`, {method:icaMethod})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/ica/plot/components`, {method:icaMethod},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       setPng(response.data.img)
       setNumComponents([...Array(response.data.components).keys()])
@@ -86,7 +89,10 @@ const ICACsv = () => {
 
   const handlePlotPropierties = () => {
     setLoadingProp(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/ica/plot/properties`, {method:icaMethod})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/ica/plot/properties`, {method:icaMethod},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       setPngProperties(response.data)
       setLoadingProp(false)

@@ -16,7 +16,10 @@ const SubjectsTable = ({ sidebar }) => {
   const navigate = useNavigate()
 
   const deleteSubject = (id) => {
-    axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/${id}`)
+    axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/${id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     setRows(rows.filter(e => e.id !== id))
   }
   
@@ -79,7 +82,10 @@ const SubjectsTable = ({ sidebar }) => {
   
   useEffect(() => {
     let isMounted = true;  
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`,
+     { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       if (isMounted) {
         setLoading(false)

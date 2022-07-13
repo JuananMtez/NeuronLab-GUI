@@ -60,7 +60,10 @@ const EpochData = () => {
   }
   const handleClickPlotEpoch = () => {
     setLoadingPlotEpoch(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/plot`, { n_events: valueEpoch})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/plot`, { n_events: valueEpoch},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...imgsPlot]
       a.push(response.data)
@@ -78,7 +81,10 @@ const EpochData = () => {
 
   const handleClickPlotPsdTop = () => {
     setLoadingPlotPsd(true)
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/psd/topomap/plot`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/psd/topomap/plot`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       setImgPsdTop(response.data)
 
@@ -89,7 +95,10 @@ const EpochData = () => {
 
   const handleClickPlotPsdChart = () => {
     setLoadingPlotPsdChart(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/psd/plot`, {f_min: plotChart.f_min, f_max: plotChart.f_max, average: plotChart.average})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/psd/plot`, {f_min: plotChart.f_min, f_max: plotChart.f_max, average: plotChart.average},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...imgsPsdChart]
       a.push(response.data)
@@ -106,7 +115,10 @@ const EpochData = () => {
 
   const handleClickAveragePlot = () => {
     setLoadingPlotAverage(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/average/plot`, { channel: chart.channel, stimulus: chart.stimulus})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/average/plot`, { channel: chart.channel, stimulus: chart.stimulus},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...imgsAverage]
       a.push(response.data)
@@ -123,7 +135,10 @@ const EpochData = () => {
 
   const handleClickCompare = () => {
     setLoadingCompare(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/compare/plot`, { stimulus: stimulusCompare})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/compare/plot`, { stimulus: stimulusCompare},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...imgsCompare]
       a.push(response.data)
@@ -141,7 +156,10 @@ const EpochData = () => {
 
   const handleClickActivity = () => {
     setLoadingActivity(true)
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/activity/plot`, { stimulus: stimulusBrain, times: times, extrapolate: extrapolate})
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/activity/plot`, { stimulus: stimulusBrain, times: times, extrapolate: extrapolate},
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       let a = [...imgsActivity]
       a.push(response.data)

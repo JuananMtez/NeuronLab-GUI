@@ -16,7 +16,10 @@ const ExperimentsTable = ({ init }) => {
   const navigate = useNavigate()
 
   const deleteSubject = (id) => {
-    axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/${id}`)
+    axios.delete(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/${id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     setRows(rows.filter(e => e.id !== id))
   }
   
@@ -77,7 +80,10 @@ const ExperimentsTable = ({ init }) => {
     let isMounted = true;  
     const user = JSON.parse(localStorage.getItem('user'))
 
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/filter/researcher/${user.id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/filter/researcher/${user.id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       if (isMounted) {
         setLoading(false)

@@ -12,7 +12,10 @@ const TableOwnFeatureExtraction = memo(({csv}) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv}/feature`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv}/feature`,
+      { headers: {
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+       }})
       .then(response => {
         if (response.data !== null) 
           setData([response.data])

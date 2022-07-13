@@ -36,7 +36,10 @@ const Prediction = ({ csv }) => {
   useEffect(() => {
     let isMounted = true
     if (isMounted && csv !== undefined) {
-      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/models/csv/${csv.id}`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/models/csv/${csv.id}`,
+      { headers: {
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+       }})
       .then(response => {
         setData(response.data)
         setLoading(false)
@@ -71,7 +74,10 @@ const Prediction = ({ csv }) => {
         e.stopPropagation() 
         setLoadingPredict(true)
         setText({text: '', n_jumps: 0})
-        axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}/predict/csv/${csv.id}`)
+        axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}/predict/csv/${csv.id}`,
+        { headers: {
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+         }})
         .then(response => {
           setText(response.data)
         })
@@ -101,7 +107,10 @@ const SummaryBtn = (params) => {
         e.stopPropagation() 
         setLoadingSummary(true)
         setText({text: '', n_jumps: 0})
-        axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}/predict/summary`)
+        axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${params.id}/predict/summary`,
+        { headers: {
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+         }})
         .then(response => {
           setText(response.data)
         })

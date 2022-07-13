@@ -10,7 +10,7 @@ import { properties } from '../../properties';
 const FormLogin = () => {
 
   let navigate = useNavigate()
-  const [value, setValue] = useState({ user: '', password: ''})
+  const [value, setValue] = useState({ username: '', password: '' })
   const [showError, setShowError] = useState(false)
 
   let disabled = true
@@ -37,9 +37,20 @@ const FormLogin = () => {
   }
 
   const handleLogin = () => {
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/researcher/login`, value)
+    const bodyFormData = new FormData()
+
+    bodyFormData.append('grant_type', '')
+    bodyFormData.append('username', value.username)
+
+    bodyFormData.append('password', value.password)
+    bodyFormData.append('scope', '')
+    bodyFormData.append('client_id', '')
+    bodyFormData.append('client_secret', '')
+
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/token`, value)
     .then(response => {
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", JSON.stringify(response.data.token.access_token));
       navigate('../home')
     }).catch(error => {
       if (error.response.status === 404) {

@@ -66,7 +66,10 @@ const StaticChart = memo(({ csv, experiment }) => {
       data: {},
       loading: true
     })
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/plot/chart?beginning=${slide[0]}&duraction=${slide[1]}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/plot/chart?beginning=${slide[0]}&duraction=${slide[1]}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       setStatus({
         data: response.data,

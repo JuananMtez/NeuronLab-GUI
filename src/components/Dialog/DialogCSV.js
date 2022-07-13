@@ -22,7 +22,10 @@ export default function DialogCSV({open, handleClose}) {
 
   useEffect(() => {
     if (open.id !== undefined && open.id !== 0)
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${open.id}/csvs`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/training/${open.id}/csvs`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       setCsvs(response.data)
     })

@@ -20,7 +20,10 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
 
 
   const handleReload = () => {
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${data.id}`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${data.id}`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       handleExperiments({
         ...data,

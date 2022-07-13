@@ -14,7 +14,10 @@ const PreproccesingCSV = ({ csv, experiment, sidebar }) => {
     let isMounted = true
   
     if (isMounted && csv.id !== undefined) {
-      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/preproccessing`)
+      axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/preproccessing`,
+      { headers: {
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+       }})
       .then(response => {
         setPreproccessing(response.data)
       })

@@ -37,7 +37,10 @@ const FormExperiment = ({ init }) => {
 
   useEffect(() => {
     let isMounted = true;  
-    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`)
+    axios.get(`${properties.protocol}://${properties.url_server}:${properties.port}/subject/`,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => {
       if (isMounted) {
         setSubjects(response.data)
@@ -169,7 +172,10 @@ const FormExperiment = ({ init }) => {
       subjects: subjectsSelected
     } 
 
-    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/`, experiment)
+    axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/`, experiment,
+    { headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+     }})
     .then(response => navigate('../experiments', { state: { sidebar: init} }))
   }
 

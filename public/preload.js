@@ -12,7 +12,7 @@ const path = require('path')
 // Connection 
 const protocol = 'http'
 const url = '192.168.56.111'
-const port = '8000'
+const port = '80'
 
 // LSL Device stream
 let streamsEEG = null;
@@ -262,7 +262,8 @@ contextBridge.exposeInMainWorld('api', {
 				maxBodyLength: Infinity,
 				maxContentLength: Infinity,
 				headers: {
-						...form.getHeaders()
+                    ...form.getHeaders(),
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
 				},
 				adapter: require('axios/lib/adapters/http')
 			})
@@ -273,7 +274,16 @@ contextBridge.exposeInMainWorld('api', {
 
     applyPreproccessing: (msg) => {
 			ipcRenderer.send('open_dialog', 'Loading...')
-			axios.post(`${protocol}://${url}:${port}/csv/preproccessing/list`, msg, { adapter: require('axios/lib/adapters/http')}) 
+			//axios.post(`${protocol}://${url}:${port}/csv/preproccessing/list`, msg, { adapter: require('axios/lib/adapters/http')})
+            axios({
+				method: 'post',
+				url: `${protocol}://${url}:${port}/csv/preproccessing/list`,
+				data: msg,
+				headers: {
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+				},
+				adapter: require('axios/lib/adapters/http')
+			}) 
 			.then(response => ipcRenderer.send('open_dialog', response.data))
       .catch(error => ipcRenderer.send('open_dialog', 'A server internal error has occurred'))
     },
@@ -281,7 +291,16 @@ contextBridge.exposeInMainWorld('api', {
     applyIca: (id_csv, msg) => {
         ipcRenderer.send('open_dialog', 'Loading...')
 
-        axios.post(`${protocol}://${url}:${port}/csv/${id_csv}/ica/apply`, msg, { adapter: require('axios/lib/adapters/http')}) 
+        //axios.post(`${protocol}://${url}:${port}/csv/${id_csv}/ica/apply`, msg, { adapter: require('axios/lib/adapters/http')})
+        axios({
+            method: 'post',
+            url: `${protocol}://${url}:${port}/csv/${id_csv}/ica/apply`,
+            data: msg,
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            adapter: require('axios/lib/adapters/http')
+        })  
         .then(response => ipcRenderer.send('open_dialog', 'Components excluded correctly'))
 
         .catch(error => ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred'))
@@ -294,7 +313,16 @@ contextBridge.exposeInMainWorld('api', {
 
     applyTrainingMachine: (msg) => {
 			ipcRenderer.send('open_dialog', 'Loading...')
-			axios.post(`${protocol}://${url}:${port}/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
+			//axios.post(`${protocol}://${url}:${port}/training/machine`, msg, { adapter: require('axios/lib/adapters/http')})
+            axios({
+                method: 'post',
+                url: `${protocol}://${url}:${port}/training/machine`,
+                data: msg,
+                headers: {
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+                },
+                adapter: require('axios/lib/adapters/http')
+            })  
 			.then(response => ipcRenderer.send('open_dialog', 'Training model created'))
 			.catch(error => 
 				ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? 
@@ -302,7 +330,16 @@ contextBridge.exposeInMainWorld('api', {
 			},
     applyTrainingDeep: (msg) => {
 			ipcRenderer.send('open_dialog', 'Loading...')
-			axios.post(`${protocol}://${url}:${port}/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
+			//axios.post(`${protocol}://${url}:${port}/training/deep`, msg, { adapter: require('axios/lib/adapters/http')})
+            axios({
+                method: 'post',
+                url: `${protocol}://${url}:${port}/training/deep`,
+                data: msg,
+                headers: {
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+                },
+                adapter: require('axios/lib/adapters/http')
+            })  
 			.then(response => ipcRenderer.send('open_dialog', 'Training model created'))
 			.catch(error => {
 				ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ?
@@ -313,8 +350,16 @@ contextBridge.exposeInMainWorld('api', {
 
     applyFeature: (msg) => {
         ipcRenderer.send('open_dialog', 'Loading...')
-
-        axios.post(`${protocol}://${url}:${port}/csv/feature/list`, msg, { adapter: require('axios/lib/adapters/http')}) 
+        //axios.post(`${protocol}://${url}:${port}/csv/feature/list`, msg, { adapter: require('axios/lib/adapters/http')}) 
+        axios({
+            method: 'post',
+            url: `${protocol}://${url}:${port}/csv/feature/list`,
+            data: msg,
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            },
+            adapter: require('axios/lib/adapters/http')
+        })
         .then(response => ipcRenderer.send('open_dialog', response.data))
 
         .catch(error => {

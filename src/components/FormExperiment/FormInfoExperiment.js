@@ -53,7 +53,10 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
       <IconButton 
         onClick={e => {
           e.stopPropagation()
-          axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/add/${data.id}/researchers`,{researchers_id: [params.id]})
+          axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/add/${data.id}/researchers`,{researchers_id: [params.id]},
+          { headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+           }})
           .then(response => {
             let research = researchers.find(re => re.id === params.id)
             handleResearchers(researchers.filter(r => r.id !== params.id))
@@ -81,7 +84,10 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
       <IconButton 
         onClick={e => {
           e.stopPropagation()
-          axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/add/${data.id}/subjects`,{ subjects_id: [params.id]})
+          axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/add/${data.id}/subjects`,{ subjects_id: [params.id]},
+          { headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+           }})
           .then(response => {
             let subject = subjects.find(s => s.id === params.id)
 
@@ -152,7 +158,10 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
           onClick={e => {
             e.stopPropagation()
             if (params.id !== data.researcher_creator_id) {
-              axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]})
+              axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]},
+              { headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+               }})
               .then(response => {
                 handleResearchers([...researchers, data.researchers.find(re => re.id === params.id)])
                 handleExperiments({
@@ -173,7 +182,10 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
         onClick={e => {
           e.stopPropagation()
           if (params.id !== data.researcher_creator_id) {
-            axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]})
+            axios.patch(`${properties.protocol}://${properties.url_server}:${properties.port}/experiment/delete/${data.id}/researchers`,{researchers_id: [params.id]},
+            { headers: {
+              'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+             }})
             handleResearchers([...researchers, data.researchers.find(re => re.id === params.id)])
             handleExperiments({
               ...data,
