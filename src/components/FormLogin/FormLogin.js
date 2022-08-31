@@ -10,8 +10,9 @@ import { properties } from '../../properties';
 const FormLogin = () => {
 
   let navigate = useNavigate()
-  const [value, setValue] = useState({ username: '', password: '' })
+  const [value, setValue] = useState({ username: '', password: '', privateKey: '' })
   const [showError, setShowError] = useState(false)
+
 
   let disabled = true
 
@@ -23,7 +24,7 @@ const FormLogin = () => {
         [e.target.name]: e.target.value })
   }
 
-  if (value.user !== '' && value.password !== '')
+  if (value.user !== '' && value.password !== '' && value.privateKey !== '')
     disabled = false
 
 
@@ -51,11 +52,12 @@ const FormLogin = () => {
     .then(response => {
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("token", JSON.stringify(response.data.token.access_token));
+      localStorage.setItem("privateKey", JSON.stringify(value.privateKey))
       navigate('../home')
     }).catch(error => {
-      if (error.response.status === 404) {
+      if (error.response.status === 404 || error.response.status === 401) {
         setShowError(true)
-        setValue({ user: '', password: ''})
+        setValue({ user: '', password: '', privateKey: ''})
       }
     })
   }
@@ -82,6 +84,17 @@ const FormLogin = () => {
         onKeyDown={onKeyDown}
         name="password"
         id="password"
+      />
+      <TextFieldStyled 
+        fullWidth 
+        margin="normal" 
+        label="Private Key" 
+        type="password" 
+        value={value.privateKey}
+        onChange={handleChange}
+        onKeyDown={onKeyDown}
+        name="privateKey"
+        id="privateKey"
       />
       {showError && 
         <p className="textError">* User or password incorrect</p>

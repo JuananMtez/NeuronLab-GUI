@@ -1,6 +1,6 @@
 import Sidebar from "../components/Sidebar/Sidebar"
 import LogoUm from '../img/logo_umu.jpeg'
-import LogoBrain from '../img/brainlab_logo2.png'
+import LogoBrain from '../img/neuronlab_logo2.png'
 
 import  Container  from "@mui/material/Container"
 import  Box  from "@mui/material/Box"
@@ -19,7 +19,7 @@ const Home = () => {
           flexDirection: 'column',
           alignItems: 'center',
         }}>
-         <h1 className="title">Welcome to BrainLab</h1>
+         <h1 className="title">Welcome to NeuronLab</h1>
 
         </Box>
         <p className="text">Application to provide researchers to study brain signals obtained from different subjects.</p>
@@ -33,7 +33,7 @@ const Home = () => {
           </Grid>
           <Grid item xs={6} >
 
-            <img style={{marginLeft: '25vh'}}className="brainlab" src={LogoBrain} alt="logo_brainlab"/>
+            <img style={{marginLeft: '25vh'}}className="neuronlab" src={LogoBrain} alt="logo_neuronlab"/>
 
           </Grid>
         </Grid>

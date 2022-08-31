@@ -22,6 +22,9 @@ const CSVTable = ({ data, handleData, sidebar, rowsSelected, showPreproccessing,
   const [loadingCopy, setLoadingCopy] = useState(false)
   const navigate = useNavigate()
 
+
+
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
     setOpen(false)

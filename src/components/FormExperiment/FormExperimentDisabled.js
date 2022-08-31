@@ -11,10 +11,15 @@ import axios from "axios";
 import FormPreproccessing from "../Preproccessing/FormPreproccessing";
 import FormFeatureExtraction from "../FeatureExtraction/FormFeatureExtraction";
 import { properties } from "../../properties";
+import DecryptButton from "../EncryptstButton/DecrypButton"
+import EncryptButton from "../EncryptstButton/EncryptButton"
+
+
 
 const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleExperiments, subjects, handleSubjects, init }) => {
   const [showInfo, setInfo] = useState(false)
   const [csvSelected, setCsvSelected] = useState([])
+  const [encrypted, setEncrypted] = useState(true)
 
   const [form, setForm] = useState({showProccessing: false, showFeatureExtraction: false})
 
@@ -25,13 +30,35 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
       'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
      }})
     .then(response => {
+      
       handleExperiments({
         ...data,
         csvs: response.data
         
       })
+      setEncrypted(true)
     })
 
+  }
+
+  const handleDecrypt = () => {
+    let a = window.api.decryptSubjects(data.csvs)
+    handleExperiments({
+      ...data,
+      csvs: a
+    })
+    setEncrypted(false)
+    
+  }
+
+  const handleEncrypt = () => {
+    let a = window.api.encryptSubjects(data.csvs)
+    handleExperiments({
+      ...data,
+      csvs: a
+    })
+
+    setEncrypted(true)
   }
 
   const getForm = () => {
@@ -146,8 +173,18 @@ const FormExperimentDisabled = ({ data, researchers, handleResearchers, handleEx
           <Grid item xs={12} sx={{mb:'5vh'}}>
             <ReloadButton 
               handleReloadClick={handleReload}
+              
+            />
+            <EncryptButton 
+              handleEncryptClick={handleEncrypt}
+              disabled={encrypted}
+            />
+            <DecryptButton 
+              handleDecryptClick={handleDecrypt}
+              disabled={!encrypted}
             />
           </Grid>
+          
           <Grid item xs={6}>
             <Button 
               variant="contained"

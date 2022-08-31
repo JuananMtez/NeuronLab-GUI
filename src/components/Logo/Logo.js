@@ -2,7 +2,7 @@ import "./Logo.css"
 
 const Logo = () => {
     return (
-        <p><span className="blue">Brain</span><span className="gray">Lab</span></p>
+        <p><span className="blue">Neuron</span><span className="gray">Lab</span></p>
     )
 }
 

@@ -10,6 +10,7 @@ export default function Login() {
   useEffect(() => {
     localStorage.removeItem("user");
     localStorage.removeItem("token")
+    localStorage.removeItem("privateKey")
   }, [])
 
   return (

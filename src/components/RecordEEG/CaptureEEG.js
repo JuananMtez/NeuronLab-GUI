@@ -19,10 +19,15 @@ const CaptureEEG = ({ state }) => {
     { play: false, recording: false, hasRecorded: false, pairDevice: false, time:5, 
       typeDevice:'', nameStimulus:'', pairStimulus: false, portUdp:0, showStimulus: false }
   )
+  
   const [protocol, setProtocol] = useState('')
   const [statusDialog, setStatusDialog] = useState({open: false, name:''});
   const navigate = useNavigate()
+  
+  
+ 
 
+  
   const handleOpenDialog = () => {
     setStatusDialog({
       ...statusDialog,
@@ -45,7 +50,11 @@ const CaptureEEG = ({ state }) => {
   }
 
   const handleSave = () => {
-    window.api.save(statusDialog.name, state.subject_id, state.experiment.id)
+
+
+    
+
+    window.api.save(statusDialog.name, state.subject_id, state.subjectName, state.experiment.id)
     navigate('/experiment/data', { state: {id: state.experiment.id, sidebar:false}})
 
   }

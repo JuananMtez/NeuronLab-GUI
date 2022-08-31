@@ -7,12 +7,12 @@ var FormData = require('form-data');
 var fs = require('fs');
 const axios = require('axios').default;
 const path = require('path')
-
+var CryptoJS = require("crypto-js");
 
 // Connection 
 const protocol = 'http'
-const url = '192.168.56.111'
-const port = '80'
+const url = 'localhost'
+const port = '8080'
 
 // LSL Device stream
 let streamsEEG = null;
@@ -243,7 +243,7 @@ contextBridge.exposeInMainWorld('api', {
         clear()
     },
 
-    save: (name, subject_id, experiment_id) => {
+    save: (name, subject_id, subjectName, experiment_id) => {
         
 			fs.writeFileSync(`tmp/temp_file_${cont}.json`, JSON.stringify({dataInput, timestamp, stimuli}))
 			const form = new FormData();
@@ -252,11 +252,16 @@ contextBridge.exposeInMainWorld('api', {
 				form.append('files', fs.createReadStream(path.join('tmp', names[i])))
 
 			timeCorrection = streamInletEEG.timeCorrection()
+            
 			ipcRenderer.send('open_dialog', 'Loading...')
 
+            let encJson = CryptoJS.AES.encrypt(subjectName, JSON.parse(localStorage.getItem('privateKey')).toString())
+            let subjectCypher = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson))
+            
+            
 			axios({
 				method: 'post',
-				url: `${protocol}://${url}:${port}/csv/?name=${name}&subject_id=${subject_id}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
+				url: `${protocol}://${url}:${port}/csv/?name=${name}&subject_id=${subject_id}&subject_name_cypher=${subjectCypher}&experiment_id=${experiment_id}&time_correction=${timeCorrection}`,
 
 				data: form,
 				maxBodyLength: Infinity,
@@ -366,6 +371,37 @@ contextBridge.exposeInMainWorld('api', {
             ipcRenderer.send('open_dialog', error.response.data.detail !== undefined ? error.response.data.detail : 'A server internal error has occurred')
         } )
     },
+
+    decryptSubjects: (csvs) =>  {
+        
+        csvs.map(c => {
+            if (c.decrypt === undefined || !c.decrypt) {
+                let decData = CryptoJS.enc.Base64.parse(c.subject_name).toString(CryptoJS.enc.Utf8)
+                c.subject_name = CryptoJS.AES.decrypt(decData, JSON.parse(localStorage.getItem('privateKey'))).toString(CryptoJS.enc.Utf8)
+                c.decrypt = true
+            }
+            return c
+        })
+
+        return csvs
+    },
+
+    encryptSubjects: (csvs) => {
+        csvs.map(c => {
+            if (c.decrypt !== undefined && c.decrypt && c.subject_name !== '') {
+                let encJson = CryptoJS.AES.encrypt(c.subject_name, JSON.parse(localStorage.getItem('privateKey')).toString())
+                c.subject_name = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson))
+                c.decrypt = false
+            }
+            return c
+        })
+
+        return csvs
+    }
+
+
+    
+
 
 
     

@@ -120,8 +120,8 @@ const FormInfoExperiment = ({ data, researchers, handleResearchers, handleExperi
           let url = ''
           if (data.device.type === 'eeg_headset')
             url = '../experiment/record_eeg' 
-            
-          navigate(url, { state: { sidebar:init, experiment: data, subject_id: params.id }})
+          const subject = data.subjects.filter(s => s.id === params.id)[0]
+          navigate(url, { state: { sidebar:init, experiment: data, subject_id: params.id, subjectName: subject.name + ' ' + subject.surname }})
           
           
         }}

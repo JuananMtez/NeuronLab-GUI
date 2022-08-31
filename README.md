@@ -1,4 +1,4 @@
-# BrainLab
+# NeuronLab
 
 In the project directory, you can run:
 
