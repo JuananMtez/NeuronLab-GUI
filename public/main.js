@@ -10,7 +10,7 @@ function createWindow() {
       {
         width: 900, 
         height: 680,
-        icon: path.join(__dirname, 'icon.icns'),
+
         webPreferences: {
           preload: path.join(__dirname, 'preload.js')
         }
