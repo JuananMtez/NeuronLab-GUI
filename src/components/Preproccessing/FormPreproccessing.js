@@ -50,10 +50,10 @@ const FormPreproccessing = ({ csvs }) => {
       case 'fir':
         return (
           <Box sx={{ml:'2vh'}}>
-            <CustomSelect renderValue={o => renderValue(o, 'Phase')} value={phase} onChange={setPhase}>
-              <StyledOption value={'zero'}>Zero</StyledOption>
-              <StyledOption value={'zero-double'}>Zero-Double</StyledOption>
-              <StyledOption value={'minimum'}>Minimum</StyledOption>
+            <CustomSelect renderValue={o => renderValue(o, 'Phase')}>
+              <StyledOption onClick={() => setPhase('zero')} value={'zero'}>Zero</StyledOption>
+              <StyledOption onClick={() => setPhase('zero-double')} value={'zero-double'}>Zero-Double</StyledOption>
+              <StyledOption onClick={() => setPhase('minimum')} value={'minimum'}>Minimum</StyledOption>
             </CustomSelect> 
           </Box>
         )
@@ -120,9 +120,9 @@ const FormPreproccessing = ({ csvs }) => {
 
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <CustomSelect renderValue={o => renderValue(o, 'Preproccessing type')} value={preproccesing} onChange={setPreproccessing}>
-          <StyledOption value={'filtering'}>Filtering</StyledOption>
-          <StyledOption value={'downsampling'}>Downsampling</StyledOption>
+        <CustomSelect renderValue={o => renderValue(o, 'Preproccessing type')}>
+          <StyledOption onClick={() => setPreproccessing('filtering')} value={'filtering'}>Filtering</StyledOption>
+          <StyledOption onClick={() => setPreproccessing('downsampling')} value={'downsampling'}>Downsampling</StyledOption>
         </CustomSelect>
       </Grid>
       {
@@ -130,15 +130,15 @@ const FormPreproccessing = ({ csvs }) => {
 
         <Grid item xs={12} sx={{mt:3}}>
           <Stack direction="row" spacing={0}>
-            <CustomSelect renderValue={o => renderValue(o, 'Filter Type')} value={filterType} onChange={setFilterType}>
-              <StyledOption value={'bandpass'}>Bandpass</StyledOption>
-              <StyledOption value={'notch'}>Notch</StyledOption>
+            <CustomSelect renderValue={o => renderValue(o, 'Filter Type')}>
+              <StyledOption onClick={() => setFilterType('bandpass')} value={'bandpass'}>Bandpass</StyledOption>
+              <StyledOption onClick={() => setFilterType('notch')} value={'notch'}>Notch</StyledOption>
             </CustomSelect>
 
             <Box sx={{ ml: '2vh' }}>
-              <CustomSelect renderValue={o => renderValue(o, 'Filter Method')} value={filterMethod} onChange={setFilterMethod}>
-                <StyledOption value={'iir'}>IIR</StyledOption>
-                <StyledOption value={'fir'}>FIR</StyledOption>
+              <CustomSelect renderValue={o => renderValue(o, 'Filter Method')}>
+                <StyledOption onClick={() => setFilterMethod('iir')} value={'iir'}>IIR</StyledOption>
+                <StyledOption onClick={() => setFilterMethod('fir')} value={'fir'}>FIR</StyledOption>
               </CustomSelect>
             </Box>
             {getLabelFilterMethod()}

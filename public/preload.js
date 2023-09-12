@@ -12,7 +12,7 @@ var CryptoJS = require("crypto-js");
 // Connection 
 const protocol = 'http'
 const url = 'localhost'
-const port = '8080'
+const port = '8000'
 
 // LSL Device stream
 let streamsEEG = null;
@@ -273,7 +273,10 @@ contextBridge.exposeInMainWorld('api', {
 				adapter: require('axios/lib/adapters/http')
 			})
 			.then(response =>  ipcRenderer.send('open_dialog', 'CSV created'))
-			.catch((error => ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')))
+			.catch((error => {
+                console.log(error)
+                ipcRenderer.send('open_dialog', 'CSV not created. Check if stimulus are corrects')
+            }))
 			.finally(() => clear())     
     },
 

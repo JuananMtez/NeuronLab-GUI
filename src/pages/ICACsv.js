@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar/Sidebar"
 import { useLocation } from "react-router-dom"
 import { Container, Box, Button, Grid, Stack } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import { CustomSelect, StyledOption } from "../components/Select/CustomSelect";
+import { CustomSelect, StyledOption, renderValue } from "../components/Select/CustomSelect";
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from "axios"
 import Checkbox from '@mui/material/Checkbox';
@@ -36,17 +36,7 @@ const ICACsv = () => {
       setIcaMethod(e)
   }
 
-  function renderValue(option, text) {
-    if (option == null) {
-      return <span>{text}</span>;
-    }
-  
-    return (
-      <span>
-        {option.label}
-      </span>
-    );
-  }
+
   const handleChecked = (ev, i) => {
     setChecked(checked.map((e, index) => index === i ? ev.target.checked : e))
   }
@@ -114,7 +104,7 @@ const ICACsv = () => {
     handleClickBack()
 
   }
-
+  console.log(icaMethod)
 
   return (
     <Sidebar init={init} pos='2' tab={'ICA'} handleSidebar={setInit}>
@@ -141,10 +131,10 @@ const ICACsv = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Stack direction="row" spacing={2}>
-              <CustomSelect renderValue={o => renderValue(o, 'ICA Method')} value={icaMethod} onChange={(e) => handleOnChangeSelect(e)}>
-                <StyledOption value={'fastica'}>Fastica</StyledOption>
-                <StyledOption value={'picard'}>Picard</StyledOption>
-                <StyledOption value={'infomax'}>Infomax</StyledOption>
+              <CustomSelect renderValue={(o) => renderValue(o, 'ICA Method')}>
+                <StyledOption onClick={() => handleOnChangeSelect('fastica')} value={'fastica'}>Fastica</StyledOption>
+                <StyledOption onClick={() => handleOnChangeSelect('picard')} value={'picard'}>Picard</StyledOption>
+                <StyledOption onClick={() => handleOnChangeSelect('infomax')} value={'infomax'}>Infomax</StyledOption>
               </CustomSelect>
               <LoadingButton
                 loading={loading}

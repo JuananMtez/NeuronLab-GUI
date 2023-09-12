@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar/Sidebar"
 import { Button, Container, Grid, Stack, Chip } from "@mui/material"
 import { Box } from "@mui/system"
 import { LoadingButton } from "@mui/lab"
-import { CustomSelect, StyledOption } from "../components/Select/CustomSelect";
+import { CustomSelect, StyledOption, renderValue } from "../components/Select/CustomSelect";
 import axios from "axios"
 import ChannelsEnum from '../components/ChannelsEnum'
 import TextFieldStyled from '../components/TextFieldStyled/TextFieldStyled'
@@ -47,17 +47,7 @@ const EpochData = () => {
 
   const handleClickBack = () =>   navigate('/csv/data', { state: {csv: csv , sidebar:state.sidebar, experiment: experiment}})
   
-  function renderValue(option, text) {
-    if (option == null) {
-      return <span>{text}</span>;
-    }
-  
-    return (
-      <span>
-        {option.label}
-      </span>
-    );
-  }
+
   const handleClickPlotEpoch = () => {
     setLoadingPlotEpoch(true)
     axios.post(`${properties.protocol}://${properties.url_server}:${properties.port}/csv/${csv.id}/epoch/plot`, { n_events: valueEpoch},
@@ -204,7 +194,7 @@ const EpochData = () => {
     }
   }
 
-
+  console.log(valueEpoch)
   const handleDelete = (e, time) => {
     e.preventDefault()
     setTimes(times.filter(t => t !== time))
@@ -241,10 +231,10 @@ const EpochData = () => {
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row" spacing={2}>
-            <CustomSelect renderValue={o => renderValue(o, 'Epochs number')} value={valueEpoch} onChange={setValueEpoch}>
+            <CustomSelect renderValue={o => renderValue(o, 'Epochs number')} >
               {
                 nEpochs.map(v => (
-                  <StyledOption key={v} value={`${v+1}`}>{v + 1}</StyledOption>                
+                  <StyledOption onClick={() =>  setValueEpoch(v+1)} key={v} value={`${v+1}`}>{v + 1}</StyledOption>
                 ))
               }
             </CustomSelect> 
@@ -285,18 +275,18 @@ const EpochData = () => {
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row">
-              <CustomSelect renderValue={o => renderValue(o, 'Channel')} value={chart.channel} onChange={(e) => setChart({...chart, channel: e})}>
+              <CustomSelect renderValue={o => renderValue(o, 'Channel')}>
               {
                 experiment.device.channels.map((ch, index) => (
-                  <StyledOption key={index} value={ChannelsEnum[ch.channel-1].name}>{ChannelsEnum[ch.channel-1].name}</StyledOption>
+                  <StyledOption onClick={() => setChart({...chart, channel: ChannelsEnum[ch.channel-1].name})} key={index} value={ChannelsEnum[ch.channel-1].name}>{ChannelsEnum[ch.channel-1].name}</StyledOption>
                 ))
               }
               </CustomSelect>
               <Box sx={{ml:'2vh'}}></Box>
-              <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} value={chart.stimulus} onChange={(e) => setChart({...chart, stimulus: e})}>
+              <CustomSelect renderValue={o => renderValue(o, 'Stimulus')}>
               {
                 experiment.stimuli.map((l, index) => (
-                  <StyledOption key={index} value={l.description}>{l.description}</StyledOption>
+                  <StyledOption onClick={()  => setChart({...chart, stimulus: l.description})} key={index} value={l.description}>{l.description}</StyledOption>
 
                 
                 ))
@@ -344,10 +334,10 @@ const EpochData = () => {
           <Grid item xs={12}>
             <Stack direction="row">
 
-            <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} value={stimulusCompare} onChange={setStimulusCompare}>
+            <CustomSelect renderValue={o => renderValue(o, 'Stimulus')}>
               {
                 experiment.stimuli.map((l, index) => (
-                  <StyledOption key={index} value={l.description}>{l.description}</StyledOption>
+                  <StyledOption onClick={() => setStimulusCompare(l.description)} key={index} value={l.description}>{l.description}</StyledOption>
                 ))
               }
               </CustomSelect>
@@ -390,19 +380,19 @@ const EpochData = () => {
           </Grid>
           <Grid item xs={12}>
            <Stack direction="row">
-            <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} value={stimulusBrain} onChange={setStimulusBrain}>
+            <CustomSelect renderValue={o => renderValue(o, 'Stimulus')} >
               {
                 experiment.stimuli.map((l, index) => (
-                  <StyledOption key={index} value={l.description}>{l.description}</StyledOption>
+                  <StyledOption onClick={() => setStimulusBrain(l.description)} key={index} value={l.description}>{l.description}</StyledOption>
                 ))
               }
               </CustomSelect>
               <Box sx={{ml: '2vh'}}></Box>
-            <CustomSelect renderValue={o => renderValue(o, 'Extrapolate')} value={extrapolate} onChange={setExtrapolate}>
-              
-              <StyledOption value={'box'}>Box</StyledOption>
-              <StyledOption value={'local'}>Local</StyledOption>
-              <StyledOption value={'head'}>Head</StyledOption>
+            <CustomSelect renderValue={o => renderValue(o, 'Extrapolate')} >
+
+              <StyledOption onClick={() => setExtrapolate('box')} value={'box'}>Box</StyledOption>
+              <StyledOption onClick={() => setExtrapolate('local')} value={'local'}>Local</StyledOption>
+              <StyledOption onClick={() => setExtrapolate('head')} value={'head'}>Head</StyledOption>
 
           
             </CustomSelect>
@@ -539,10 +529,10 @@ const EpochData = () => {
             />
                           <Box sx={{ml:'2vh'}}></Box>
 
-              <CustomSelect renderValue={o => renderValue(o, 'Average')} value={plotChart.average} onChange={(e) => setPlotChart({...plotChart, average: e})}>
+              <CustomSelect renderValue={o => renderValue(o, 'Average')}>
               
-                <StyledOption value={true}>True</StyledOption>
-                <StyledOption value={false}>False</StyledOption>                
+                <StyledOption onClick={() => setPlotChart({...plotChart, average: true})} value={true}>True</StyledOption>
+                <StyledOption  onClick={() => setPlotChart({...plotChart, average: false})} value={false}>False</StyledOption>
              
             </CustomSelect> 
             <Box sx={{ml:'2vh'}}></Box>

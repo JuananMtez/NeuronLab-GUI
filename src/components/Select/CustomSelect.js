@@ -1,9 +1,36 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Select, selectClasses } from '@mui/base/Select';
-import {Option, optionClasses } from '@mui/base/Option';
+
+import { Option, optionClasses } from '@mui/base/Option';
 import { Popper } from '@mui/base/Popper';
 import { styled } from '@mui/system';
+
+
+function CustomSelect(props) {
+  const slots = {
+    root: StyledButton,
+    listbox: StyledListbox,
+    popper: StyledPopper,
+    ...props.slots,
+  };
+
+  return <Select {...props} slots={slots} />;
+}
+
+CustomSelect.propTypes = {
+  /**
+   * The components used for each slot inside the Select.
+   * Either a string to use a HTML element or a component.
+   * @default {}
+   */
+  slots: PropTypes.shape({
+    listbox: PropTypes.elementType,
+    popper: PropTypes.func,
+    root: PropTypes.elementType,
+  }),
+};
+
 
 const blue = {
   100: '#DAECFF',
@@ -15,40 +42,46 @@ const blue = {
 };
 
 const grey = {
-  100: '#E7EBF0',
-  200: '#E0E3E7',
-  300: '#CDD2D7',
-  400: '#B2BAC2',
-  500: '#A0AAB4',
-  600: '#6F7E8C',
-  700: '#3E5060',
-  800: '#2D3843',
-  900: '#1A2027',
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f',
 };
 
 const StyledButton = styled('button')(
-  ({ theme }) => `
+    ({ theme }) => `
   font-family: IBM Plex Sans, sans-serif;
   font-size: 0.875rem;
   box-sizing: border-box;
-  min-height: calc(1.5em + 22px);
-  min-width: 240px;
-  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
-  border-radius: 0.75em;
-  margin-top: 0.5em;
-  padding: 10px;
+  min-width: 320px;
+  padding: 8px 12px;
+  border-radius: 8px;
   text-align: left;
   line-height: 1.5;
+  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
   color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  box-shadow: 0px 2px 6px ${
+        theme.palette.mode === 'dark' ? 'rgba(0,0,0, 0.50)' : 'rgba(0,0,0, 0.05)'
+    };
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 120ms;
 
   &:hover {
-    background: ${theme.palette.mode === 'dark' ? '' : grey[100]};
-    border-color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+    background: ${theme.palette.mode === 'dark' ? grey[800] : grey[50]};
+    border-color: ${theme.palette.mode === 'dark' ? grey[600] : grey[300]};
   }
 
   &.${selectClasses.focusVisible} {
-    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[600] : blue[100]};
+    border-color: ${blue[400]};
+    outline: 3px solid ${theme.palette.mode === 'dark' ? blue[500] : blue[200]};
   }
 
   &.${selectClasses.expanded} {
@@ -65,27 +98,30 @@ const StyledButton = styled('button')(
 );
 
 const StyledListbox = styled('ul')(
-  ({ theme }) => `
+    ({ theme }) => `
   font-family: IBM Plex Sans, sans-serif;
   font-size: 0.875rem;
   box-sizing: border-box;
-  padding: 5px;
-  margin: 10px 0;
+  padding: 6px;
+  margin: 12px 0;
   min-width: 320px;
-  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
-  border-radius: 0.75em;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  border-radius: 12px;
   overflow: auto;
   outline: 0px;
+  background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+  box-shadow: 0px 2px 6px ${
+        theme.palette.mode === 'dark' ? 'rgba(0,0,0, 0.50)' : 'rgba(0,0,0, 0.05)'
+    };
   `,
 );
 
 const StyledOption = styled(Option)(
-  ({ theme }) => `
+    ({ theme }) => `
   list-style: none;
   padding: 8px;
-  border-radius: 0.45em;
+  border-radius: 8px;
   cursor: default;
 
   &:last-of-type {
@@ -122,37 +158,17 @@ const StyledPopper = styled(Popper)`
   z-index: 1;
 `;
 
-const Paragraph = styled('p')(
-  ({ theme }) => `
-  font-family: IBM Plex Sans, sans-serif;
-  font-size: 0.875rem;
-  margin: 10px 0;
-  color: ${theme.palette.mode === 'dark' ? grey[400] : grey[700]};
-  `,
-);
+function renderValue(option, text) {
 
-function CustomSelect(props) {
-  const components = {
-    Root: StyledButton,
-    Listbox: StyledListbox,
-    Popper: StyledPopper,
-    ...props.components,
-  };
+  if (option == null) {
+    return <span>{text}</span>;
+  }
 
-  return <Select {...props} components={components} />;
+  return (
+      <span>
+        {option.label}
+      </span>
+  );
 }
 
-CustomSelect.propTypes = {
-  /**
-   * The components used for each slot inside the Select.
-   * Either a string to use a HTML element or a component.
-   * @default {}
-   */
-  components: PropTypes.shape({
-    Listbox: PropTypes.elementType,
-    Popper: PropTypes.func,
-    Root: PropTypes.elementType,
-  }),
-};
-
-export { CustomSelect, StyledOption }
+export { CustomSelect, StyledOption, renderValue }

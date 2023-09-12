@@ -57,12 +57,12 @@ const FormFeatureExtraction = ({csvs}) => {
   return (
     <Grid container>
       <Grid item xs={12}>
-      <CustomSelect renderValue={o => renderValue(o, 'Feature')} value={feature} onChange={setFeature}>
-        <StyledOption value={'nothing'}>Nothing</StyledOption>
-        <StyledOption value={'mean'}>Mean</StyledOption>
-        <StyledOption value={'variance'}>Variance</StyledOption>
-        <StyledOption value={'deviation'}>Standard Deviation</StyledOption>
-        <StyledOption value={'psd'}>Power Spectral Density</StyledOption>
+      <CustomSelect renderValue={o => renderValue(o, 'Feature')}>
+        <StyledOption onClick={() => setFeature('nothing')} value={'nothing'}>Nothing</StyledOption>
+        <StyledOption onClick={() => setFeature('mean')} value={'mean'}>Mean</StyledOption>
+        <StyledOption onClick={() => setFeature('variance')} value={'variance'}>Variance</StyledOption>
+        <StyledOption onClick={() => setFeature('deviation')} value={'deviation'}>Standard Deviation</StyledOption>
+        <StyledOption onClick={() => setFeature('psd')} value={'psd'}>Power Spectral Density</StyledOption>
       </CustomSelect> 
       </Grid>
       {

@@ -1,6 +1,11 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { download } = require('electron-dl');
+const fs = require('fs');
+
+
+if (!fs.existsSync('tmp'))
+    fs.mkdirSync('tmp')
 
 
 let win;

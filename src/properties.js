@@ -1,5 +1,5 @@
 export const properties = {
     url_server: 'localhost',
-    port: '8080',
+    port: '8000',
     protocol: 'http'
 };
