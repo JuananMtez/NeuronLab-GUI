@@ -94,5 +94,5 @@ while True:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[Electron.js]: https://img.shields.io/badge/Electron.js-47848F?style=for-the-badge&logo=react&logoColor=61DAFB
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react
+[Electron.js]: https://img.shields.io/badge/Electron.js-20232A?style=for-the-badge&logo=react
