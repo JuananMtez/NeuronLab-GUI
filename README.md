@@ -30,7 +30,7 @@ NeuronLab is a secure, multiplatform, and web-based framework that provides a wo
 
 ### Installation
 1. Clone the repo.
-```shell
+```sh
 git clone https://github.com/JuananMtez/NeuronLab-GUI.git
 ```
 
