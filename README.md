@@ -46,6 +46,21 @@ cd NeuronLab-GUI
 npm install
 ```
 
+5. Modify properties in ```./src/properties.js```.
+```js
+export const properties = {
+    url_server: 'TO BE DEFINED',
+    port: 'TO BE DEFINED',
+    protocol: 'TO BE DEFINED'
+};
+```
+
+| parameter                    |   Description   |
+|:-----------------------------|:---------------:|
+| url_server                   | 	Domain where NeuronLab-Backend is deployed
+| port	                        |  	Port where NeuronLab-Backend is deployed
+| protocol 	                   |     Protocol (https or http)
+
 ## Usage
 
 Run NeuronLab-GUI in the development mode.
